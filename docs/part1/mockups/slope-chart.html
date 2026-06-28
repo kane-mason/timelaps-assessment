@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Competitive Funnel — drawn (slope chart)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#8A8A8A; --text-3:#B4B4B4;
+    --focus:#F2A60C; --focus-deep:#A66A00; --focus-tint:#FEF6E2; --focus-edge:#F4C657;
+    --lead:#16A34A; --dim:#C4C0B7; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:38px 24px 56px}
+  .wrap{max-width:920px;margin:0 auto}
+  .htitle{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .hsub{font-size:13.5px;color:var(--text-2);margin-top:5px} .hsub .b{color:var(--focus-deep);font-weight:600}
+  .legend{display:flex;gap:18px;align-items:center;margin:18px 0 6px}
+  .legend span{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);font-weight:500}
+  .lln{width:18px;height:0;border-top:3px solid}
+  .lsh{width:14px;height:10px;border-radius:2px;background:var(--focus);opacity:.14}
+  .card{background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 2px rgba(10,10,10,.03);padding:10px 8px 4px;margin-top:6px}
+  svg text{font-family:var(--sans)}
+  .read{font-size:14px;color:var(--ink);line-height:1.55;margin-top:20px;max-width:840px}
+  .read b{font-weight:700} .read .am{color:var(--focus-deep);font-weight:700}
+  .foot{font-size:10.5px;color:var(--text-3);margin-top:16px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="htitle">Aurora's Competitive Funnel</div>
+  <div class="hsub">Q1 2026 &nbsp;·&nbsp; <span class="b">Aurora</span> vs Borealis, Cascade and Drift — each line is a brand's journey down the funnel</div>
+
+  <div class="legend">
+    <span><span class="lln" style="border-color:var(--lead)"></span>Leader (Borealis)</span>
+    <span><span class="lln" style="border-color:var(--focus)"></span>Your brand (Aurora)</span>
+    <span><span class="lln" style="border-color:var(--dim)"></span>Others</span>
+    <span><span class="lsh"></span>Aurora's gap to leader</span>
+  </div>
+
+  <div class="card">
+  <svg viewBox="0 0 880 430" width="100%" role="img" aria-label="Slope chart of brand funnel by stage">
+    <!-- gridlines -->
+    <g stroke="#EFEDE7" stroke-width="1">
+      <line x1="150" y1="40" x2="710" y2="40"/>
+      <line x1="150" y1="120" x2="710" y2="120"/>
+      <line x1="150" y1="200" x2="710" y2="200"/>
+      <line x1="150" y1="280" x2="710" y2="280"/>
+      <line x1="150" y1="360" x2="710" y2="360"/>
+    </g>
+    <g fill="#C4C0B7" font-size="10" font-family="ui-monospace,monospace" text-anchor="end">
+      <text x="138" y="44">80%</text><text x="138" y="124">60%</text><text x="138" y="204">40%</text><text x="138" y="284">20%</text><text x="138" y="364">0%</text>
+    </g>
+
+    <!-- gap-to-leader shaded band (Borealis -> Aurora) -->
+    <path d="M170,56 L430,196 L690,264 L690,296 L430,232 L170,112 Z" fill="#F2A60C" opacity="0.12"/>
+
+    <!-- competitor lines -->
+    <polyline points="170,240 430,312 690,344" fill="none" stroke="var(--dim)" stroke-width="2"/>
+    <polyline points="170,184 430,280 690,320" fill="none" stroke="var(--dim)" stroke-width="2"/>
+    <!-- leader -->
+    <polyline points="170,56 430,196 690,264" fill="none" stroke="var(--lead)" stroke-width="2.5"/>
+    <!-- aurora -->
+    <polyline points="170,112 430,232 690,296" fill="none" stroke="var(--focus)" stroke-width="4"/>
+
+    <!-- dots -->
+    <g>
+      <!-- drift --> <g fill="var(--dim)"><circle cx="170" cy="240" r="3"/><circle cx="430" cy="312" r="3"/><circle cx="690" cy="344" r="3"/></g>
+      <!-- cascade --> <g fill="var(--dim)"><circle cx="170" cy="184" r="3"/><circle cx="430" cy="280" r="3"/><circle cx="690" cy="320" r="3"/></g>
+      <!-- leader --> <g fill="var(--lead)"><circle cx="170" cy="56" r="4.5"/><circle cx="430" cy="196" r="4.5"/><circle cx="690" cy="264" r="4.5"/></g>
+      <!-- aurora --> <g fill="var(--focus)" stroke="#fff" stroke-width="1.5"><circle cx="170" cy="112" r="6"/><circle cx="430" cy="232" r="6"/><circle cx="690" cy="296" r="6"/></g>
+    </g>
+
+    <!-- value labels -->
+    <g font-size="11" font-family="ui-monospace,monospace" text-anchor="middle">
+      <!-- leader -->
+      <g fill="#4F7B5C" font-weight="600"><text x="170" y="46">76%</text><text x="430" y="186">41%</text><text x="690" y="254">24%</text></g>
+      <!-- competitors faint -->
+      <g fill="#BDB9B0"><text x="170" y="174">44%</text><text x="430" y="270">20%</text><text x="690" y="310">10%</text>
+         <text x="170" y="230">30%</text><text x="430" y="302">12%</text><text x="690" y="334">4%</text></g>
+      <!-- aurora -->
+      <g fill="var(--focus-deep)" font-weight="800" font-size="13" font-family="'Rethink Sans',sans-serif"><text x="170" y="100">62%</text><text x="430" y="220">32%</text><text x="690" y="284">16%</text></g>
+    </g>
+
+    <!-- brand labels at right -->
+    <g font-size="12" text-anchor="start">
+      <text x="704" y="268" fill="#4F7B5C" font-weight="700">Borealis</text>
+      <text x="704" y="300" fill="var(--focus-deep)" font-weight="800">Aurora ▸ YOU</text>
+      <text x="704" y="324" fill="#A8A49B" font-weight="600">Cascade</text>
+      <text x="704" y="348" fill="#A8A49B" font-weight="600">Drift</text>
+    </g>
+
+    <!-- stage axis labels -->
+    <g text-anchor="middle" fill="var(--ink)" font-weight="700" font-size="13.5">
+      <text x="170" y="392">Awareness</text><text x="430" y="392">Consideration</text><text x="690" y="392">Used</text>
+    </g>
+    <g text-anchor="middle" fill="var(--text-3)" font-size="10.5">
+      <text x="170" y="408">heard of it</text><text x="430" y="408">would consider</text><text x="690" y="408">bought it</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="read">
+    <b>Reading it:</b> every line slopes down — the funnel narrows for all four brands. <span class="am">Aurora</span> sits a steady <b>#2</b> the whole way: always below Borealis, always above Cascade and Drift, lines never crossing. The <span class="am">shaded band</span> is Aurora's gap to the leader — it pinches in slightly at Consideration (the one place Aurora is closing) and stays wide at Awareness and Used, where Borealis is pulling away.
+  </div>
+  <div class="foot">% of all people surveyed · 250 per wave · Q1 2026</div>
+</div>
+</body>
+</html>

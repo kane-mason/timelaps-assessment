@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Competitive Funnel — drawn funnels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#8A8A8A; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-tint:#FEF6E2; --focus-edge:#F4C657;
+    --aware:#F59E0B; --consider:#38BDF8; --used:#34D17F;
+    --lead:#16A34A; --gry:#D6D2C9; --gry-d:#C7C3B9; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:38px 24px 56px}
+  .wrap{max-width:940px;margin:0 auto}
+  .htitle{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .hsub{font-size:13.5px;color:var(--text-2);margin-top:5px} .hsub .b{color:var(--focus-deep);font-weight:600}
+  .legend{display:flex;gap:18px;align-items:center;margin:18px 0 6px}
+  .legend span{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);font-weight:500}
+  .sw{width:11px;height:11px;border-radius:3px}
+  .card{background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 2px rgba(10,10,10,.03);padding:14px 12px 8px;margin-top:6px}
+  .read{font-size:14px;color:var(--ink);line-height:1.55;margin-top:20px;max-width:860px}
+  .read b{font-weight:700} .read .am{color:var(--focus-deep);font-weight:700}
+  .foot{font-size:10.5px;color:var(--text-3);margin-top:16px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="htitle">Aurora's Competitive Funnel</div>
+  <div class="hsub">Q1 2026 &nbsp;·&nbsp; <span class="b">Aurora</span> vs Borealis, Cascade and Drift — each shape is a brand's funnel, wide at the top, narrowing to buyers</div>
+
+  <div class="legend">
+    <span><span class="sw" style="background:var(--aware)"></span>Aware</span>
+    <span><span class="sw" style="background:var(--consider)"></span>Consider</span>
+    <span><span class="sw" style="background:var(--used)"></span>Used</span>
+    <span style="margin-left:8px"><span class="sw" style="background:var(--focus-tint);border:1.5px solid var(--focus)"></span>Your brand · others dimmed</span>
+    <span><span style="display:inline-block;width:17px;border-top:2px dotted var(--lead)"></span>Leader's funnel (benchmark)</span>
+  </div>
+
+  <div class="card">
+  <svg viewBox="0 0 890 210" width="100%" role="img" aria-label="Funnel shapes per brand">
+    <!-- aurora highlight -->
+    <rect x="314" y="2" width="176" height="184" rx="14" fill="var(--focus-tint)" stroke="var(--focus)" stroke-width="1.5"/>
+
+    <!-- stage labels (left) -->
+    <g text-anchor="end" font-family="var(--sans)">
+      <text x="116" y="50" font-size="13" font-weight="700" fill="var(--ink)">Aware</text>
+      <text x="116" y="64" font-size="10" fill="var(--text-3)">heard of it</text>
+      <text x="116" y="92" font-size="13" font-weight="700" fill="var(--ink)">Consider</text>
+      <text x="116" y="106" font-size="10" fill="var(--text-3)">would buy</text>
+      <text x="116" y="132" font-size="13" font-weight="700" fill="var(--ink)">Used</text>
+      <text x="116" y="146" font-size="10" fill="var(--text-3)">bought it</text>
+    </g>
+
+    <!-- brand name labels -->
+    <g text-anchor="middle" font-family="var(--sans)" font-size="13">
+      <text x="195" y="178" font-weight="700" fill="#5E5A51">Borealis</text>
+      <text x="195" y="194" font-size="10" font-weight="700" fill="var(--lead)">★ LEADER</text>
+      <text x="390" y="178" font-weight="800" fill="var(--focus-deep)">Aurora</text>
+      <text x="390" y="194" font-size="10" font-weight="800" fill="var(--focus-deep)">YOUR BRAND</text>
+      <text x="585" y="178" font-weight="600" fill="#A8A49B">Cascade</text>
+      <text x="780" y="178" font-weight="600" fill="#A8A49B">Drift</text>
+    </g>
+
+    <!-- ===== FUNNELS (stroke=white separators) ===== -->
+    <g stroke="#FFFFFF" stroke-width="2">
+      <!-- Borealis (leader, grey) -->
+      <g fill="var(--gry-d)">
+        <polygon points="133,30 257,30 228.4,72 161.6,72"/>
+        <polygon points="161.6,72 228.4,72 214.6,114 175.4,114"/>
+        <polygon points="175.4,114 214.6,114 206.8,150 183.2,150"/>
+      </g>
+      <!-- Aurora (vivid, stage colours) -->
+      <polygon fill="var(--aware)" points="339.4,30 440.6,30 416.1,72 363.9,72"/>
+      <polygon fill="var(--consider)" points="363.9,72 416.1,72 403.1,114 376.9,114"/>
+      <polygon fill="var(--used)" points="376.9,114 403.1,114 397.9,150 382.1,150"/>
+      <!-- Cascade (grey, dim) -->
+      <g fill="var(--gry)">
+        <polygon points="549.1,30 620.9,30 601.3,72 568.7,72"/>
+        <polygon points="568.7,72 601.3,72 593.2,114 576.8,114"/>
+        <polygon points="576.8,114 593.2,114 589.9,150 580.1,150"/>
+      </g>
+      <!-- Drift (grey, dim) -->
+      <g fill="var(--gry)">
+        <polygon points="755.5,30 804.5,30 789.8,72 770.2,72"/>
+        <polygon points="770.2,72 789.8,72 783.3,114 776.7,114"/>
+        <polygon points="776.7,114 783.3,114 782,150 778,150"/>
+      </g>
+    </g>
+
+    <!-- dotted outline of the leader's funnel, on each competitor (gap to leader) -->
+    <g fill="none" stroke="var(--lead)" stroke-width="1.5" stroke-dasharray="3 4" stroke-linejoin="round" opacity="0.9">
+      <polygon points="328,30 452,30 423.4,72 409.6,114 401.76,150 378.24,150 370.4,114 356.6,72"/>
+      <polygon points="523,30 647,30 618.4,72 604.6,114 596.76,150 573.24,150 565.4,114 551.6,72"/>
+      <polygon points="718,30 842,30 813.4,72 799.6,114 791.76,150 768.24,150 760.4,114 746.6,72"/>
+    </g>
+
+    <!-- value labels (right of each funnel) -->
+    <g font-family="ui-monospace,monospace" text-anchor="start">
+      <g fill="#8A8A8A" font-size="11"><text x="264" y="55">76%</text><text x="264" y="97">41%</text><text x="264" y="136">24%</text></g>
+      <g fill="var(--focus-deep)" font-size="13" font-weight="800" font-family="'Rethink Sans',sans-serif"><text x="458" y="55">62%</text><text x="458" y="97">32%</text><text x="458" y="136">16%</text></g>
+      <g fill="#BDB9B0" font-size="11"><text x="655" y="55">44%</text><text x="655" y="97">20%</text><text x="655" y="136">10%</text></g>
+      <g fill="#BDB9B0" font-size="11"><text x="850" y="55">30%</text><text x="850" y="97">12%</text><text x="850" y="136">4%</text></g>
+    </g>
+  </svg>
+  </div>
+
+  <div class="read">
+    <b>Reading it:</b> every brand's funnel narrows from awareness down to buyers, and the <span style="color:var(--lead);font-weight:700">dotted outline</span> on each is the leader's funnel — so the space between a brand's solid shape and the dotted line is exactly how far it trails Borealis. <span class="am">Aurora's</span> gap is widest at the top and bottom and tightest in the middle (consideration) — the one place it's catching up.
+  </div>
+  <div class="foot">Widths ∝ % of all people surveyed · 250 per wave · Q1 2026</div>
+</div>
+</body>
+</html>
