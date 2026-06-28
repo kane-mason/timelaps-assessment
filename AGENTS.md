@@ -65,7 +65,7 @@ Before trusting a computed number, run the verification skill — it recomputes 
 from raw and asserts it matches the pre-computed outputs:
 
 ```bash
-node .claude/skills/verify-data/verify.mjs    # or the /verify-data skill in Claude Code
+node --test 'lib/**/*.test.mjs'    # or the /verify-data skill in Claude Code
 ```
 
 ## Stack
