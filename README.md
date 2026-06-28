@@ -20,7 +20,8 @@ The full brief is in [docs/brief/exercise.md](docs/brief/exercise.md) (transcrib
 
 | Path | Contents |
 |---|---|
-| [docs/](docs/) | The brief, the verified data profile, the [design philosophy](docs/design.md), per-part design notes ([part1/](docs/part1/), [part2/](docs/part2/)), and a [decisions log](docs/decisions.md). |
+| [DESIGN.md](DESIGN.md) | The visual design system for AI agents (Google Stitch open format) — design tokens + rationale. Read before building any UI. |
+| [docs/](docs/) | The brief, the verified data profile, per-part design notes ([part1/](docs/part1/), [part2/](docs/part2/)), and a [decisions log](docs/decisions.md). |
 | [data/](data/) | Provided datasets the app consumes. |
 
 The Part 1 build is set up to grow into a **Next.js app at the repo root** — app code (`app/`, `components/`, `package.json`, …) will live here alongside `data/` and `docs/`.

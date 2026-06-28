@@ -59,11 +59,12 @@ hand. Reconsider only if a *secondary* visualization later needs real charting (
 lightweight lib then, scoped to it). Matches the external design recommendation
 (`docs/part1/chatgpt-recommendation.md`), which reached the same conclusion from the brief alone.
 
-### 2026-06-28 · Adopt a written design philosophy
-Extracted the durable design principles — decision-ready over decorative, insight-first,
-comparison-first, restraint, colour-as-meaning, premium/analytical, and grounded numbers —
-into `docs/design.md`, wired into AGENTS.md and an always-on Cursor rule so they're applied to
-all UI work.
+### 2026-06-28 · Adopt DESIGN.md (open format) for the visual system
+Use **`DESIGN.md`** at the repo root — the Google Stitch open format (YAML design tokens +
+Markdown rationale) that AI coding/design agents read, the design-side sibling to AGENTS.md.
+It captures the durable principles (decision-ready, insight-first, comparison-first, restraint,
+colour-as-meaning, premium/analytical, grounded numbers) plus concrete tokens, and is wired into
+AGENTS.md and an always-on Cursor rule so it's applied to all UI work.
 
 ## Open
 

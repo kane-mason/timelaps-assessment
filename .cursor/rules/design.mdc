@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Design philosophy
 
-Full version: `docs/design.md`. Any screen or UI in this project must follow it:
+Full version: `DESIGN.md` (repo root — design tokens + rationale). Any screen or UI in this project must follow it:
 
 - **Decision-ready, not decorative** — a modern strategy tool, not a colourful BI dashboard; the insight lands in ~10s.
 - **Insight first, evidence second** — headline + summary cards, then the detail, then "what this means".

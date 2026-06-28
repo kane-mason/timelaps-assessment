@@ -80,8 +80,8 @@ time-boxed stretch.
 
 ## Design philosophy
 
-All UI work follows [docs/design.md](docs/design.md) — read it before building or styling any
-screen. In short: decision-ready, not decorative (a strategy tool, not a BI dashboard);
+All UI work follows [DESIGN.md](DESIGN.md) — the root design-system file for agents (Google
+Stitch open format: design tokens + rationale). Read it before building or styling any screen. In short: decision-ready, not decorative (a strategy tool, not a BI dashboard);
 insight-first hierarchy; comparison-first; restraint (minimal chrome, large numbers, no
 gratuitous animation); colour carries meaning (one accent for Aurora, muted competitors,
 semantic green/red for movement); premium analytical feel; and every number grounded in the
