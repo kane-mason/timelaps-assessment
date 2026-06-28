@@ -94,6 +94,18 @@ headline feature of the Part 2 AI analyst**, not a footnote. Separately confirme
 wave deltas are real, not mix artefact (age- and gender-standardized Δ within <1pt of raw). Full
 working in `docs/part1/derived-metrics.md`.
 
+### 2026-06-28 · Part 1 page story: the diverging gap to the leader
+Organize the page around one non-obvious, comparison-first insight: **Aurora's gap to Borealis is
+moving in opposite directions by stage** — closing on consideration (−10.0→−8.4) but widening at
+both ends, awareness (−5.2→−14.0) and usage (−4.0→−8.8). Four beats: standings → diverging gap
+(the hook) → why (conversion: aware→consider up, consider→used stuck ~48% vs Borealis ~60%) → so
+what. All on solid n=250. Hero stays **Option I (stages-as-columns leaderboard)**, not drawn
+funnels — reaffirms the parked `funnel-drawing-parked.html` (too close to Timelaps' product;
+drawn funnels also hurt cross-brand comparison). Dropped from the main page: a standalone
+share-of-stage strip (competes with the hero) and the 4th exec tile (kept 3). Reconciles the
+ChatGPT page-design doc: adopt its layered structure, overrule its drawn-funnel hero. See
+`docs/part1/spec.md` §3.
+
 ## Open
 
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether
