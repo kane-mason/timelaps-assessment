@@ -106,6 +106,16 @@ share-of-stage strip (competes with the hero) and the 4th exec tile (kept 3). Re
 ChatGPT page-design doc: adopt its layered structure, overrule its drawn-funnel hero. See
 `docs/part1/spec.md` §3.
 
+### 2026-06-29 · Part 1 story evolves to "reach + trial, not preference"
+Cross-brand lenses (layer 2 in `lib/metrics.mjs`) re-diagnose Aurora's gap. The diverging gap
+stays the visible *hook*, but the deeper spine is now: Aurora isn't disliked — head-to-head among
+the 115 aware of *both* brands, consideration is −5.2 (vs the −8.4 headline) and closing; rejection
+47.7% ≈ leader's 46.3%; 48% of considerers are exclusive. So the awareness side is a **reach**
+problem (buy salience) and the usage side a **trial** problem, sharpest among **women** (−14pt vs
+−5pt men; solid bases), worth ~+3.8pp usage (labelled projection). Spec §3/§5 rewritten; the page
+gains a two-panel "diagnosis" section (reach-not-preference + the trial leak). Note: the
+age-by-consider cut stays low-confidence — the trustworthy demographic signal is gender, not age.
+
 ## Open
 
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether

@@ -39,22 +39,31 @@ Rank is unchanging: **Borealis #1, Aurora #2, Cascade #3, Drift #4** at every st
 
 ## 3. The story (honest narrative)
 
-**Spine (4 beats, each a comparison, each on solid n=250):**
+The visible hook is the **diverging gap**; the deeper, decision-driving story underneath is
+**"reach + trial, not preference."** Five beats — the first three describe, the last two diagnose:
 
 1. **The standings.** Aurora is a steady **#2** — comfortably ahead of Cascade and Drift,
    consistently behind Borealis at all three stages. *(funnel + rank)*
-2. **The hook — the gap is *diverging*.** Aurora's distance to Borealis is moving in *opposite
+2. **The hook — the gap is *diverging*.** Aurora's distance to Borealis moves in *opposite
    directions* by stage: **closing on consideration** (−10.0 → −8.4) but **widening at both ends**
-   — awareness (−5.2 → −14.0) and usage (−4.0 → −8.8). Gaining in the middle, losing at the
-   edges. This is the non-obvious competitive insight. *(gapToLeader)*
-3. **Why — efficiency vs scale.** The consideration gain is a real *conversion* win (aware→consider
-   47.7% → 52.3%), but Aurora can't turn consideration into usage (flat ~48% while Borealis surges
-   to ~60%). The leak is lower-funnel, not awareness. *(conditionalConversion)*
-4. **So what.** Defend awareness, fix trial conversion — consideration is the foothold to build
-   from. *(synthesis)*
+   — awareness (−5.2 → −14.0) and usage (−4.0 → −8.8). Gaining in the middle, losing at the edges.
+   *(gapToLeader)*
+3. **It's not that people dislike Aurora.** Among the 115 people who know *both* brands, Aurora
+   nearly matches Borealis on consideration (**49.6% vs 54.8%, −5.2** — far tighter than the −8.4
+   headline) and is *closing*. Its rejection rate among the aware (**47.7%**) is leader-level
+   (Borealis 46.3%), and its considerers are as loyal as the leader's (**48% exclusive**). *(headToHead,
+   rejectionRate, repertoire)*
+4. **So the awareness side of the divergence is a *reach* problem** — too few people know Aurora,
+   not too few like it. Fix it by buying salience; once people know Aurora, it competes.
+5. **And the usage side is a *trial* problem, concentrated among women.** Aurora converts
+   consideration → usage at ~48% vs Borealis's ~60% — the real lower-funnel leak. The weakness is
+   sharpest with **women** (Aurora −14pt vs Borealis, vs −5pt among men; solid bases). Closing the
+   conversion gap is worth **~+3.8pp usage** (a labelled projection). *(conditionalConversion,
+   stageByDimension, opportunityIfMatched)*
 
-**Context:** Drift is collapsing (every stage down); Cascade inches up. The contest that matters
-is Aurora vs Borealis.
+**So what:** buy awareness (it's reach, not rejection), fix trial conversion (especially with
+women). **Context:** Drift is collapsing; Cascade inches up; the contest that matters is Aurora
+vs Borealis — and the market is getting more contested (switchable demand 31.7% → 38%).
 
 ## 4. Decision: which denominator
 
@@ -68,23 +77,25 @@ diagnostic and exposes Aurora's real weakness (consider→used). See the decisio
 1. **Header** — eyebrow "OVERVIEW", title *Aurora's Competitive Funnel Position*, subtitle
    *Q1 2026 vs Q4 2025*.
 2. **Narrative headline** (the insight, generated from data):
-   > *Aurora is the clear #2 — closing on Borealis in consideration, but losing ground where it
-   > counts: awareness and usage.*
-3. **Three executive cards:**
-   - **Bright spot — Consideration:** +3.2pp, Aurora's biggest gain and the only narrowing gap (−8.4pp).
-   - **Biggest risk — Awareness:** Borealis surged +9.6pp while Aurora held flat; the gap blew out from −5.2 to −14.0pp.
-   - **Fastest shift — Borealis:** extending its lead at awareness (+9.6) and usage (+5.6); Drift is collapsing.
-4. **Competitive funnel matrix** — stages as rows, brands as columns. Aurora's column gets the
-   amber container highlight. Each cell: Q1 value (large, `tabular-nums`), delta chip
-   (▲/▼ pp, `movement.positive`/`negative`), rank badge (#1–#4), and a relative bar in the
-   stage colour (`stage.aware/consider/used`), scaled to the row's max brand.
-5. **Gap-to-leader column** (right of the matrix) — per stage: Aurora's gap to Borealis +
-   whether it narrowed/widened (green/rose).
-6. **Conversion strip** — the secondary conditional-conversion insight (the leak).
-7. **"What this means"** (≤3 bullets):
-   1. Aurora is a stable #2 — clear of Cascade/Drift, behind Borealis everywhere.
-   2. The pressure is top and bottom: Borealis wins awareness fast and converts to use far better (~60% vs ~48%).
-   3. Consideration is the foothold — growing and gap-closing.
+   > *Aurora is the clear #2 — closing on Borealis in consideration, but losing ground in awareness
+   > and usage.* (Subhead deepens it: *the gap is reach + trial, not preference.*)
+3. **The hook — diverging-gap panel.** One focal visual: gap-to-leader per stage with Q4→Q1
+   movement, so "gaining in the middle, losing at the edges" reads in one glance (rose = widening,
+   green = closing). *(gapToLeader)*
+4. **The standings — competitive leaderboard** (Option I, stages as columns): brands ranked within
+   each stage, Aurora amber container highlight, leader green, others dimmed; relative bar scaled to
+   the stage leader. *(funnelByBrandWave)*
+5. **The diagnosis — two paired panels** (the re-diagnosis, the analytical heart):
+   - **Reach, not preference** — head-to-head among the aware-of-both: consider 49.6% vs 54.8%
+     (−5.2, vs the −8.4 headline) + the "liked as much as the leader" proof (rejection 47.7% vs
+     46.3%). *(headToHead, rejectionRate)*
+   - **The trial leak** — conditional conversion consider→used (~48% vs ~60%), with the women cut
+     called out and the ~+3.8pp prize (labelled projection). *(conditionalConversion,
+     stageByDimension, opportunityIfMatched)*
+6. **"What this means"** (≤3 bullets):
+   1. Aurora is a stable #2 and *as liked as the leader* — clear of Cascade/Drift.
+   2. The consideration gap is mostly **reach**: once people know both, Aurora nearly matches Borealis.
+   3. The real fixable weakness is **trial**, sharpest among women — and it's worth ~+3.8pp usage.
 
 ## 6. Design application
 
