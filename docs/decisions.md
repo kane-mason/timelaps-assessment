@@ -83,6 +83,17 @@ brand-tracking metric; matches `analysed_outputs.json`). The **conditional conve
 sharper diagnostic: Aurora converts consider→used at ~48% vs Borealis ~60%, the real lower-funnel
 gap. See `docs/part1/spec.md`.
 
+### 2026-06-28 · Data strategy: mix both, bounded by a reliability boundary
+Use the verified `analysed_outputs.json` as the headline spine; add three derived layers from
+raw — **conditional conversion**, **mix-adjusted deltas**, **share of consideration**. Key new
+finding: the thin-cell problem is far worse than the 50+ band — **every Aurora consider-by-age
+cell is n<50 in both waves** (50+ used = 4 in Q1), so demographic decomposition is mostly noise.
+Two consequences: Part 1 treats the pre-computed `aurora_consider_by_age` as low-confidence
+(don't build the main insight on it — likely a trap), and **base-size awareness becomes the
+headline feature of the Part 2 AI analyst**, not a footnote. Separately confirmed the unweighted
+wave deltas are real, not mix artefact (age- and gender-standardized Δ within <1pt of raw). Full
+working in `docs/part1/derived-metrics.md`.
+
 ## Open
 
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether
