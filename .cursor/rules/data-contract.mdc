@@ -1,0 +1,24 @@
+---
+description: Brand-funnel data semantics — count stages correctly (null≠false, nesting, denominators, thin data). Apply to any work over data/.
+alwaysApply: true
+---
+
+# Data contract
+
+Verified source of truth: `docs/data-profile.md`. When computing or reasoning about any
+metric over `data/responses_raw.json` or `data/analysed_outputs.json`:
+
+- **`null` = "not asked", never `false`.** `consider` is null unless `aware === true`;
+  `used` is null unless `consider === true`. Count a stage **only where it is `=== true`**.
+- **Stages nest:** `aware ≥ consider ≥ used`, always.
+- **Percentages are of ALL respondents in the wave** (denominator ≈ 250), not % of aware.
+- **`n < 50` is low-confidence** — flag it. The 50+ band, `nonbinary`, `prefer_not_say`,
+  and most sub-funnel cells are thin.
+- **Unweighted sample; demographic mix shifts between waves** — part of any wave-on-wave
+  delta is sample-mix artefact, not real movement. Surface that caveat when it matters.
+
+Verify any recomputed numbers before trusting them:
+
+```bash
+node .claude/skills/verify-data/verify.mjs
+```

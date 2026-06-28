@@ -1,0 +1,31 @@
+---
+description: Timelaps exercise — project overview, repo layout, and the internal/ privacy boundary
+alwaysApply: true
+---
+
+# Project
+
+The Timelaps founding-engineer exercise. Two deliverables on one (planned) Next.js site:
+
+- **Part 1** — a decision-ready funnel viz: Aurora vs Borealis / Cascade / Drift on the
+  brand funnel (aware → consider → used), Q4 2025 → Q1 2026. Notes in `docs/part1/`.
+- **Part 2** — an AI-analyst design over the same data (code optional). Notes in `docs/part2/`.
+
+Full brief: `docs/brief/exercise.md`. Verified dataset profile: `docs/data-profile.md`.
+
+## Layout
+
+- `data/` — provided datasets (`responses_raw.json`, `analysed_outputs.json`).
+- `docs/` — brief, data profile, per-part notes.
+- App code will live at the **repo root** once scaffolded (Next.js). No framework or
+  chart-library choice has been locked yet — don't assume one.
+
+## `internal/` is off-limits
+
+`internal/` is gitignored private planning material that references external/personal
+context. **Never read it into shared output, commit it, or reference it in the deliverable.**
+The repo may be shared with assessors.
+
+## Data
+
+All work on the numbers must follow the **data-contract** rule (and `docs/data-profile.md`).
