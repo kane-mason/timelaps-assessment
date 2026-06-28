@@ -1,13 +1,13 @@
 # Part 1 — Funnel comparison view
 
-The decision-ready data-viz component: where **Aurora** stands against its competitors
-(Borealis, Cascade, Drift) on the brand funnel (aware → consider → used), and how that
-competitive picture shifted **Q4 2025 → Q1 2026**.
+Where **Aurora** stands against Borealis, Cascade and Drift on the funnel (aware → consider →
+used), and how the gap moved **Q4 2025 → Q1 2026** — one decision-ready screen.
 
-Deliverable target (per the brief): a live link **or** a single self-contained HTML file.
+- **[spec.md](spec.md)** — the build-ready spec: verified data, the narrative, screen structure,
+  and components. **Start here.**
+- [chatgpt-recommendation.md](chatgpt-recommendation.md) — external design-direction reference
+  (structure is useful; its numbers are illustrative, not real).
 
-Part 1 and Part 2 are planned to ship on the **same Next.js site** (app code at the repo
-root); this folder is the home for Part 1's design notes and decisions. Data is in
-[`../../data/`](../../data/); see [`../data-profile.md`](../data-profile.md) for the verified profile.
+Visual system: [`DESIGN.md`](../../DESIGN.md). Verified data profile: [`../data-profile.md`](../data-profile.md).
 
 _Build not started._
