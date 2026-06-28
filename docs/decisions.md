@@ -49,9 +49,18 @@ presents the design** (the graded deliverable, authored in `docs/part2/`); turni
 an **actual working tool is a stretch** — optional and time-boxed, only after Part 1 is
 solid. Keep Part 1 shippable early so turnaround stays fast.
 
+### 2026-06-28 · No heavy charting library — custom funnel-matrix component
+The Part 1 hero is a **competitive funnel matrix** (funnel stages × brands): a grid of cells,
+each with a value, a Q4→Q1 delta, a rank badge and a small relative bar, plus a right-hand
+"gap to leader" decision column. That's CSS Grid + minimal inline SVG — not something a
+charting library renders better — and a polished custom component reads as more considered
+than a generic chart. So **no Recharts / Chart.js / visx / Tremor** for the matrix; build it by
+hand. Reconsider only if a *secondary* visualization later needs real charting (add a
+lightweight lib then, scoped to it). Matches the external design recommendation
+(`docs/part1/chatgpt-recommendation.md`), which reached the same conclusion from the brief alone.
+
 ## Open
 
-- **Chart library** — now in scope (Next / React chosen). None picked yet.
 - **Funnel denominator to emphasise** — % of all respondents (as pre-computed) vs the
   conditional view (% of aware → consider, % of consider → used) for a sharper "where is the
   funnel leaking" read. Likely lead with the headline metric and bring in the conditional
