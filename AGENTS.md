@@ -22,9 +22,23 @@ root (not yet scaffolded).
 | Path | What |
 |---|---|
 | `data/` | Provided datasets the app consumes (`responses_raw.json`, `analysed_outputs.json`). |
-| `docs/` | Brief, verified data profile, and per-part design notes. |
+| `docs/` | Brief, verified data profile, per-part design notes, and the [decisions log](docs/decisions.md). |
 | `.claude/`, `.cursor/`, `.mcp.json` | Agent tooling — skills, rules, MCP servers. |
 | `internal/` | **Private. Off-limits — see below.** |
+
+## Record decisions as you go
+
+When you make a significant build or design decision (stack, deliverable form, chart
+choice, analytical approach, a notable trade-off), append it to
+[docs/decisions.md](docs/decisions.md) with a short rationale. It keeps the build legible
+to assessors and feeds the walkthrough video. Check it at the start of a task to see what's
+already been settled.
+
+## Commits & comments
+
+Commit in **logical chunks**, never one big catch-all commit. Put the context and rationale
+in the **commit message body** (the "why"), not in code comments. Comments are welcome but
+keep them sparing — explain a non-obvious "why", not the obvious "what".
 
 ## ⚠️ `internal/` is off-limits
 
@@ -56,9 +70,13 @@ node .claude/skills/verify-data/verify.mjs    # or the /verify-data skill in Cla
 
 ## Stack
 
-Becomes a **Next.js app at the repo root** once Part 1's build approach is locked. This
-section will grow with real conventions once code exists — until then, don't assume a
-framework or chart-library choice that hasn't been made.
+**Decided:** one **Next.js app at the repo root, deployed to Vercel**, hosting both parts
+(see [docs/decisions.md](docs/decisions.md)). Not yet scaffolded. The **chart library is not
+chosen yet — don't assume one.** Conventions here will grow once code exists.
+
+Part 1 (the funnel view) is the priority. Part 2 appears as an in-app "AI Analyst" page
+presenting the design (the graded deliverable); an actual working tool is an optional,
+time-boxed stretch.
 
 ## GitHub operations
 

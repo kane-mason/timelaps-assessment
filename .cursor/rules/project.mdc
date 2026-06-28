@@ -17,14 +17,20 @@ Full brief: `docs/brief/exercise.md`. Verified dataset profile: `docs/data-profi
 
 - `data/` — provided datasets (`responses_raw.json`, `analysed_outputs.json`).
 - `docs/` — brief, data profile, per-part notes.
-- App code will live at the **repo root** once scaffolded (Next.js). No framework or
-  chart-library choice has been locked yet — don't assume one.
+- App code lives at the **repo root** — Next.js, deployed to Vercel, both parts in one app
+  (decided; see `docs/decisions.md`). Not yet scaffolded. Chart library not chosen yet —
+  don't assume one.
 
 ## `internal/` is off-limits
 
 `internal/` is gitignored private planning material that references external/personal
 context. **Never read it into shared output, commit it, or reference it in the deliverable.**
 The repo may be shared with assessors.
+
+## Decisions
+
+Record any significant build or design decision (and why) in `docs/decisions.md` as you go,
+and check it for what's already been settled before starting work.
 
 ## Data
 
