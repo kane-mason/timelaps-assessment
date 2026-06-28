@@ -1,39 +1,54 @@
 ---
 # DESIGN.md — the visual system for AI coding/design agents (Google Stitch open format).
 # Humans read README.md; agents read this before generating or styling any UI.
+# Tokens are sourced from the Timelaps brand: https://www.timelaps.io/ (Framer) + product UI.
 name: Aurora Competitive Funnel View
 description: >-
-  A decision-ready competitive analytics view for a busy marketing leader. Premium,
-  restrained, analytical — a modern strategy tool, not a colourful BI dashboard.
+  A decision-ready competitive analytics view for a busy marketing leader, in the Timelaps
+  brand: warm, premium, restrained, analytical — a modern strategy tool, not a colourful BI
+  dashboard.
 
 tokens:
   color:
     surface:
-      base: "#F7F8FA"     # off-white — default page background
-      raised: "#FFFFFF"   # cards / matrix cells
-      muted: "#EEF1F4"    # soft grey — subtle fills, zebra rows
-      inverse: "#0B1220"  # deep navy — optional single hero / inverse band
+      base: "#FCFAF6"      # warm cream — Timelaps' signature background
+      raised: "#FFFFFF"    # cards / matrix cells
+      cream: "#FFFDFA"     # lighter cream
+      muted: "#F2F2F2"     # soft grey fills, zebra rows
+      inverse: "#0A0A0A"   # near-black — dark CTA / single inverse band
     text:
-      primary: "#0B1220"   # near-navy ink
-      secondary: "#5A6473" # muted grey — labels, secondary detail
-      inverse: "#F7F8FA"   # text on dark surfaces
-    brand:
-      aurora: "#4F46E5"      # the ONE accent — reserved for Aurora (focus brand)
-      aurora_soft: "#EEF0FE" # tint for Aurora cell backgrounds / emphasis
-    competitor:
-      neutral: "#9AA4B2"   # muted tone for Borealis / Cascade / Drift
+      primary: "#0A0A0A"   # near-black ink
+      secondary: "#737373" # grey — labels, secondary detail
+      tertiary: "#A3A3A3"  # faint
+      inverse: "#FCFAF6"   # text on dark surfaces
+    action:
+      primary: "#000000"   # black — primary CTA (e.g. "Book a Call")
+      link: "#006AFF"      # blue — links, selection, interactive accent
+      link_tint: "#CCE1FF" # light-blue selection tint / border
+    accent:
+      focus: "#FBBF24"     # amber — the tracked/focus brand highlight (Aurora)
+      focus_tint: "#FEF3C7"# light amber — focus card background
+      focus_soft: "#FFF6DD"
+    stage:                 # categorical funnel-stage palette (consistent across all brands)
+      aware: "#F59E0B"     # amber
+      consider: "#38BDF8"  # sky blue
+      used: "#4ADE80"      # green
+      # Timelaps' 4th stage (frequent buyers) is pink #F472B6 — unused; our data has 3 stages.
     movement:
-      positive: "#0F9D6B"  # green — gap narrowing / positive delta
-      negative: "#E0653A"  # amber-red — gap widening / negative delta
-      flat: "#9AA4B2"      # neutral — no meaningful change
-    marker:
-      leader: "#0B1220"    # small badge / border for the stage leader
-    border: "#E2E6EB"
+      positive: "#16A34A"      # green — gap narrowing / positive delta
+      positive_tint: "#BBF7D0"
+      negative: "#DB2777"      # rose/magenta — negative delta (Timelaps' ↓ pills)
+      negative_tint: "#FFE6F1"
+      flat: "#737373"
+    border:
+      base: "#E6E6E6"
+      subtle: "rgba(34, 34, 34, 0.10)"
   typography:
     font_family:
-      sans: "Inter, ui-sans-serif, system-ui, sans-serif"
-      mono: "ui-monospace, 'SF Mono', monospace"
-    scale_rem:           # type scale, rem
+      display: "'Rethink Sans', Inter, ui-sans-serif, system-ui, sans-serif"  # headings & numbers
+      body: "'Rethink Sans', Inter, ui-sans-serif, system-ui, sans-serif"
+      mono: "'Fragment Mono', ui-monospace, 'SF Mono', monospace"
+    scale_rem:
       display: 2.25
       h1: 1.75
       h2: 1.25
@@ -44,29 +59,30 @@ tokens:
       regular: 400
       medium: 500
       semibold: 600
+      bold: 700        # Rethink Sans is set heavy for headlines
     numeric_features: "tabular-nums"   # align figures down the matrix
   spacing:
     base_px: 4
     scale_px: [4, 8, 12, 16, 24, 32, 48, 64]
   radius_px:
-    sm: 6
-    md: 10
+    sm: 8
+    md: 12
     lg: 16
+    pill: 999          # Timelaps uses fully-rounded pills for buttons/badges
   elevation:
-    card: "0 1px 2px rgba(11,18,32,0.06), 0 1px 1px rgba(11,18,32,0.04)"
+    card: "0 1px 2px rgba(10,10,10,0.05), 0 1px 1px rgba(10,10,10,0.04)"
   motion:
-    policy: "minimal"      # subtle entrance transitions only; clarity over motion
+    policy: "minimal"  # subtle entrance transitions only; clarity over motion
     duration: "150-250ms"
-
-# NOTE: concrete values (esp. the Aurora accent and font) are an initial proposal — refine.
 ---
 
 # DESIGN.md — Aurora Competitive Funnel View
 
 > Humans read `README.md`; agents read this. It defines how anything in this product should
 > look and feel — follow the tokens above and the principles below before generating or styling
-> any UI. North star: **a modern strategy tool, not a colourful BI dashboard — the insight
-> should land in about ten seconds.**
+> any UI. Tokens are taken from the **Timelaps brand** (timelaps.io + product UI). North star:
+> **a modern strategy tool, not a colourful BI dashboard — the insight should land in about ten
+> seconds.**
 
 ## Principles
 
@@ -82,12 +98,16 @@ tokens:
    no gratuitous animation or interaction. One excellent screen beats a broad, unfinished
    dashboard.
 
-4. **Colour carries meaning, never decoration.** `color.brand.aurora` is the only branded
-   colour — reserved for the focus brand; competitors render in `color.competitor.neutral`.
-   `color.movement.*` encodes deltas and gap changes. Never a different strong colour per series.
+4. **Colour encodes stage and movement, not brand identity.** Each funnel stage has one
+   consistent colour across all brands (`stage.aware` amber → `stage.consider` blue →
+   `stage.used` green). The focus brand (Aurora) is distinguished by an **amber container
+   highlight** (`accent.focus` border + `accent.focus_tint` fill), not by recolouring its data —
+   exactly how Timelaps highlights the tracked brand. Deltas/gap changes use `movement.negative`
+   (rose) and `movement.positive` (green). Never give each brand its own strong colour.
 
-5. **Premium and analytical.** Off-white / soft-grey surfaces, near-navy ink, clear type
-   hierarchy; reserve `surface.inverse` (navy) for at most one hero band. Calm and confident.
+5. **Warm and premium.** Cream surfaces (`surface.base`), near-black ink, generous space, and
+   **Rethink Sans** type. Black is reserved for primary actions; blue (`action.link`) for
+   interaction/selection. Calm and confident — it should feel native to the Timelaps product.
 
 6. **Every number is grounded.** Never invent, approximate, or eyeball a figure — each value
    traces to the data and is reproducible (`/verify-data`, the data contract). Show confidence
@@ -106,3 +126,4 @@ tokens:
 - Several separate charts where one comparative view tells the story better.
 - Excessive filters, controls, or interactions — the main story should land without a click.
 - Motion for its own sake; clarity beats animation.
+- A different strong colour per brand — colour belongs to the stage, emphasis to the container.

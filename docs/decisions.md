@@ -64,7 +64,10 @@ Use **`DESIGN.md`** at the repo root — the Google Stitch open format (YAML des
 Markdown rationale) that AI coding/design agents read, the design-side sibling to AGENTS.md.
 It captures the durable principles (decision-ready, insight-first, comparison-first, restraint,
 colour-as-meaning, premium/analytical, grounded numbers) plus concrete tokens, and is wired into
-AGENTS.md and an always-on Cursor rule so it's applied to all UI work.
+AGENTS.md and an always-on Cursor rule so it's applied to all UI work. Tokens are taken from
+the **Timelaps brand** (timelaps.io + product UI) — warm cream surfaces, near-black ink, an
+amber focus-brand highlight, stage-categorical colour, and Rethink Sans — so the submission
+feels native to their product rather than using an invented palette.
 
 ## Open
 
