@@ -76,12 +76,15 @@ Fragment Mono via `next/font/google`** (the Timelaps brand fonts, both free Goog
 matches exactly, with the captured `.woff2` URLs as a fallback; and keep **`framer-motion`** for
 *subtle entrance transitions only*, per the restraint principle — no gratuitous motion.
 
+### 2026-06-28 · Funnel denominator: lead with % of all respondents; conditional as secondary
+The matrix, ranks, deltas and gap-to-leader all use **% of all respondents** (the standard
+brand-tracking metric; matches `analysed_outputs.json`). The **conditional conversion** view
+(consider/aware, used/consider) is surfaced as a secondary "where the funnel leaks" insight — the
+sharper diagnostic: Aurora converts consider→used at ~48% vs Borealis ~60%, the real lower-funnel
+gap. See `docs/part1/spec.md`.
+
 ## Open
 
-- **Funnel denominator to emphasise** — % of all respondents (as pre-computed) vs the
-  conditional view (% of aware → consider, % of consider → used) for a sharper "where is the
-  funnel leaking" read. Likely lead with the headline metric and bring in the conditional
-  view where it's the better diagnostic.
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether
   to also build the analyst as an actual working tool is the open/stretch call, only if time
   allows after Part 1 is solid.
