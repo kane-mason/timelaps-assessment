@@ -115,6 +115,37 @@ What is actually reliable:
    up (47.7%→52.3%), consider→use flat (~48%) and trailing Borealis (~60%). Survives
    mix-adjustment, no thin cells.
 
+## Layer 2 — cross-brand & efficiency lenses (the re-diagnosis)
+
+The aware→consider→used ladder measures each brand's *size* in isolation. The raw data also
+encodes every respondent's relationship to **all four brands at once**, which supports lenses the
+ladder can't — and they converge on a sharper diagnosis. All are implemented in
+[`lib/metrics.mjs`](../../lib/metrics.mjs), pinned by tests, and written for exposure as MCP tools.
+
+- **`headToHead(A, B, wave)`** — among respondents aware of *both*, compares their consider/use
+  rates, removing the awareness gap. Q1 Aurora vs Borealis: consider **49.6% vs 54.8% (−5.2)** —
+  far tighter than the 8.4pt headline gap, and narrowing (Q4 was −10.8). **Aurora's consideration
+  gap is mostly a reach problem, not a preference problem.** Solid base (n=115).
+- **`rejectionRate(brand, wave)`** — of those aware, the share who won't consider. Aurora **47.7%**,
+  tied with Borealis (46.3%), far better than Cascade (56%) / Drift (62%). Aurora is liked as much
+  as the leader — awareness isn't wasted on a disliked brand.
+- **`pullThrough(brand, wave)`** — used|aware, end-to-end efficiency. Borealis 32% › Aurora 25% ›
+  Cascade 22% › Drift 12%. Ranks brands by efficiency, not size.
+- **`contestedDemand(wave)`** — share of considerers eyeing 2+ brands. **31.7% → 38%** Q4→Q1: the
+  market is heating up; demand is increasingly switchable.
+- **`opportunityIfMatched(brand, benchmark, wave)`** — a *labelled projection* (`is_projection:true`):
+  if Aurora converted consider→used at Borealis's rate, usage rises **15.6 → ~19.4% (+3.8pp)**,
+  closing most of the 8.8pt usage gap. Sizes the prize; never presented as observed.
+- **Gender skew** (via existing `stageByDimension(brand,'consider','gender',wave)`) — Aurora vs
+  Borealis: men −5pt, **women −14pt**. Aurora's real demographic soft spot is women — and unlike
+  the age cuts, gender bases (n≈98–136) are solid.
+
+**The re-diagnosis:** Aurora is not a weak or disliked challenger (loyal considerers, leader-level
+rejection, near-parity head-to-head). It has two specific, fixable problems — **reach** (the
+awareness gap is the main drag) and **trial** (consider→used ~48% vs ~60%, concentrated among
+women). The diverging-gap remains the visible hook; "reach + trial, not preference" is the
+decision the page should drive to.
+
 ## Reconciliation with the ChatGPT findings doc
 
 A separate analysis (`~/Downloads/timelaps_competitive_funnel_findings.md`, not in repo) reached
