@@ -59,6 +59,12 @@ hand. Reconsider only if a *secondary* visualization later needs real charting (
 lightweight lib then, scoped to it). Matches the external design recommendation
 (`docs/part1/chatgpt-recommendation.md`), which reached the same conclusion from the brief alone.
 
+### 2026-06-28 · Adopt a written design philosophy
+Extracted the durable design principles — decision-ready over decorative, insight-first,
+comparison-first, restraint, colour-as-meaning, premium/analytical, and grounded numbers —
+into `docs/design.md`, wired into AGENTS.md and an always-on Cursor rule so they're applied to
+all UI work.
+
 ## Open
 
 - **Funnel denominator to emphasise** — % of all respondents (as pre-computed) vs the

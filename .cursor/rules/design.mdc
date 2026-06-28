@@ -1,0 +1,17 @@
+---
+description: Design philosophy for any UI work — decision-ready, restrained, comparison-first, grounded numbers
+alwaysApply: true
+---
+
+# Design philosophy
+
+Full version: `docs/design.md`. Any screen or UI in this project must follow it:
+
+- **Decision-ready, not decorative** — a modern strategy tool, not a colourful BI dashboard; the insight lands in ~10s.
+- **Insight first, evidence second** — headline + summary cards, then the detail, then "what this means".
+- **Comparison is the point** — the focus brand (Aurora) is always shown against rivals; leads / trails / gap movement are obvious.
+- **Restraint** — minimal decoration, whitespace, large numbers, no gratuitous animation or interaction.
+- **Colour carries meaning** — one accent for Aurora, muted competitors, semantic green/red for movement; never a strong colour per series.
+- **Premium & analytical** — off-white / soft-grey / deep-navy, clear type hierarchy.
+- **Every number grounded** — no invented figures; trace to the data and flag low-confidence cells (`data-contract`, `/verify-data`).
+- **Plain executive copy** — titles state the insight, not the widget.
