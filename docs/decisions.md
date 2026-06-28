@@ -69,6 +69,13 @@ the **Timelaps brand** (timelaps.io + product UI) — warm cream surfaces, near-
 amber focus-brand highlight, stage-categorical colour, and Rethink Sans — so the submission
 feels native to their product rather than using an invented palette.
 
+### 2026-06-28 · Tooling: next/font for the brand fonts; Framer Motion for restrained motion only
+Don't build in Framer — it's their no-code marketing-site builder (no code export, wrong fit for
+the data-grounded Next.js app). Take only what's reusable from that world: load **Rethink Sans +
+Fragment Mono via `next/font/google`** (the Timelaps brand fonts, both free Google Fonts) so type
+matches exactly, with the captured `.woff2` URLs as a fallback; and keep **`framer-motion`** for
+*subtle entrance transitions only*, per the restraint principle — no gratuitous motion.
+
 ## Open
 
 - **Funnel denominator to emphasise** — % of all respondents (as pre-computed) vs the
