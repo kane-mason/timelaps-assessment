@@ -7,7 +7,8 @@ Addresses how the analyst decides what to compute, how it stays grounded (rather
 inventing numbers), how it chooses a visualization, how it handles thin data (`n < 50`),
 and where it can go wrong. Reasoned against the brief's two example questions.
 
-Part 1 and Part 2 are planned to ship on the **same Next.js site**; code is optional for
-this part, so this folder primarily holds the design.
+Both parts ship on the **same Next.js site**: the design authored here is surfaced as an
+in-app **"AI Analyst" page** (the graded deliverable). Turning it into an actual working
+tool is a **stretch** if time allows. This folder stays the design's source of truth.
 
 _Design not started._

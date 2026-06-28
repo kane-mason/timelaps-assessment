@@ -1,0 +1,61 @@
+# Decisions log
+
+A running record of the significant decisions made while building this assessment — what
+was decided, why, and what's still open. New decisions go at the end of **Decided**. This
+doubles as a script for the walkthrough video.
+
+> **How to use:** when a meaningful build or design choice is made (stack, deliverable
+> form, chart choice, analytical approach, a notable trade-off), add an entry with a one-
+> or two-line rationale. Keep it tight.
+
+## Decided
+
+### 2026-06-28 · Keep private planning notes out of the shared repo
+The repo may be shared with assessors. Anything that references external or personal context
+lives in a gitignored `internal/` folder and is never committed or surfaced in the
+deliverable. Everything else is committable.
+
+### 2026-06-28 · Documentation lives under `docs/`; the root is for the app
+Brief, data profile, per-part notes, and this log sit under `docs/`. The repo root is
+reserved for the Next.js app so it stays clean once scaffolded. Each part has its own
+`docs/partN/` folder for design notes.
+
+### 2026-06-28 · Make the repo AI-agent-friendly
+Added `AGENTS.md` + `CLAUDE.md`, always-on Cursor rules, and a `/verify-data` skill. The
+data contract (the easy-to-get-wrong survey semantics) is documented once in
+`docs/data-profile.md` and referenced everywhere else — a single source of truth.
+
+### 2026-06-28 · Trust the provided `analysed_outputs.json`
+Every pre-computed figure (funnels, wave deltas, the age breakdown) reproduces exactly from
+`responses_raw.json` — verified by `/verify-data`. So we're free to use the pre-computed
+numbers, recompute from raw, or mix; any recomputation must be checked against the source
+with the skill.
+
+### 2026-06-28 · One Next.js site for both parts, deployed to Vercel
+Part 1 and Part 2 ship as a single Next.js app (one live link) rather than a standalone
+self-contained HTML file — resolving the A1-vs-A2 fork in favour of the app.
+
+Reasons — **primary: speed through familiarity.** Direct hands-on experience with Next.js,
+Vercel, and the Vercel AI SDK makes this the fastest path to a polished deliverable in a
+short turnaround, with strong conviction in the tools. Secondary: it mirrors Timelaps'
+likely stack (Next / React / Vercel), gives one coherent submission and live link, and lets
+the optional Part 2 working tool reuse the AI SDK alongside Part 1's data and design layer.
+Trade-off accepted: a chart library and a deploy step are now in scope. (This rationale is
+also the answer to the video's closing "stack + AI tooling, and why".)
+
+**Guardrails:** Part 1 (the funnel view) is the priority and the bulk of the effort — it's
+graded hardest on design taste. Part 2 appears in the app as an **"AI Analyst" page that
+presents the design** (the graded deliverable, authored in `docs/part2/`); turning it into
+an **actual working tool is a stretch** — optional and time-boxed, only after Part 1 is
+solid. Keep Part 1 shippable early so turnaround stays fast.
+
+## Open
+
+- **Chart library** — now in scope (Next / React chosen). None picked yet.
+- **Funnel denominator to emphasise** — % of all respondents (as pre-computed) vs the
+  conditional view (% of aware → consider, % of consider → used) for a sharper "where is the
+  funnel leaking" read. Likely lead with the headline metric and bring in the conditional
+  view where it's the better diagnostic.
+- **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether
+  to also build the analyst as an actual working tool is the open/stretch call, only if time
+  allows after Part 1 is solid.
