@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aurora's Competitive Funnel — v3 (gap-movement focal)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-tint:#FEF6E2; --focus-edge:#F4C657;
+    --lead:#16A34A; --lead-tint:#E9F7EE; --blue:#2E7BE5;
+    --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+    --pos:#16A34A; --pos-tint:#E9F7EE; --neg:#C2526A; --neg-tint:#F6EAEE;
+    --dim:#A8A49B; --dim-bar:#DDDAD2; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:40px 24px 60px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .num{font-variant-numeric:tabular-nums}
+  .seclab{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:0 0 14px}
+  .rule{height:1px;background:var(--border);margin:30px 0}
+
+  /* INTRO */
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--text-2);text-transform:uppercase}
+  .title{font-size:16px;font-weight:600;color:var(--text-2);margin-top:12px}
+  .sub{font-size:13px;color:var(--text-3);margin-top:2px}
+  .headline{font-size:31px;font-weight:700;letter-spacing:-.02em;line-height:1.18;margin:16px 0 0;max-width:940px}
+  .headline .hi{color:var(--focus-deep)} .headline .win{color:var(--pos)} .headline .lose{color:var(--ink)}
+  .subhead{font-size:15px;color:var(--text-2);margin-top:10px;font-weight:500}
+  .subhead b{color:var(--ink);font-weight:700}
+
+  /* DIAGNOSIS — two paired panels */
+  .diag{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dp{background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column}
+  .dp-tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;margin-bottom:4px}
+  .dp.reach .dp-tag{color:var(--pos)} .dp.trial .dp-tag{color:var(--neg)}
+  .dp h3{font-size:17px;font-weight:800;letter-spacing:-.01em;margin:2px 0 3px}
+  .dp .ctx{font-size:11.5px;color:var(--text-3);margin-bottom:16px}
+  .h2h{margin-bottom:14px}
+  .h2h .lbl{font-size:11.5px;font-weight:600;color:var(--text-2);margin-bottom:7px;display:flex;justify-content:space-between}
+  .h2h .lbl .gp{font-weight:700;color:var(--ink)}
+  .vs{display:flex;flex-direction:column;gap:6px}
+  .vs .b{position:relative;height:26px;border-radius:7px;background:#F1EFE9;overflow:hidden;display:flex;align-items:center}
+  .vs .b > i{position:absolute;left:0;top:0;height:100%;border-radius:7px}
+  .vs .b.me > i{background:var(--focus)} .vs .b.them > i{background:#BFC7BD}
+  .vs .b .nm{position:relative;font-size:11.5px;font-weight:700;padding-left:10px;z-index:1}
+  .vs .b.me .nm{color:var(--focus-deep)} .vs .b.them .nm{color:#4B5246}
+  .vs .b .pct{position:absolute;right:9px;font-size:12px;font-weight:800;font-family:var(--mono);z-index:1}
+  .callout{margin-top:auto;padding:13px 15px;border-radius:11px;font-size:12.5px;line-height:1.5}
+  .dp.reach .callout{background:var(--pos-tint);border:1px solid #BFE6CC} .dp.reach .callout b{color:#0E7A38}
+  .dp.trial .callout{background:var(--focus-tint);border:1px solid var(--focus-edge)} .dp.trial .callout b{color:var(--focus-deep)}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--text-2);background:#F6F4EE;border:1px solid var(--border);border-radius:999px;padding:5px 11px;margin-top:12px}
+  .chip b{color:var(--ink)}
+  .women{font-size:12px;color:var(--ink);margin:14px 0 0;padding:11px 13px;background:#F7F5EF;border:1px solid var(--border);border-radius:10px;line-height:1.45}
+  .women b{color:var(--neg)}
+
+  /* TAKEAWAYS */
+  .takes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .tk{background:var(--surface-raised);border:1px solid var(--border);border-radius:14px;padding:15px 17px}
+  .tk .n{font-size:11px;font-weight:800;color:var(--text-3);font-family:var(--mono)}
+  .tk p{font-size:13px;line-height:1.5;margin-top:6px;color:var(--ink)} .tk p b{font-weight:700}
+
+  /* HOOK — gap-movement focal panel */
+  .gap-panel{background:var(--surface-raised);border:1px solid var(--border);border-radius:18px;padding:8px 4px}
+  .gp-head{display:grid;grid-template-columns:160px 1fr 150px;align-items:end;gap:18px;padding:12px 24px 10px}
+  .gp-head .h-lead{font-size:11px;font-weight:700;color:var(--lead);text-align:right;letter-spacing:.02em}
+  .gp-head .h-aur{font-size:11px;font-weight:700;color:var(--focus-deep)}
+  .gp-head .h-scale{font-size:10px;color:var(--text-3);font-family:var(--mono)}
+  .gr{display:grid;grid-template-columns:160px 1fr 150px;align-items:center;gap:18px;padding:15px 24px}
+  .gr + .gr{border-top:1px solid #F4F2EC}
+  .gr-stage{display:flex;align-items:center;gap:9px}
+  .gr-stage .sdot{width:11px;height:11px;border-radius:4px;flex:0 0 11px}
+  .gr-stage .nm{font-size:14.5px;font-weight:700} .gr-stage .ds{font-size:10.5px;color:var(--text-3);margin-top:1px}
+  /* track: right edge = level with leader (caught up). Bar grows LEFT = how far behind. */
+  .track{position:relative;height:30px}
+  .track .leadline{position:absolute;right:0;top:-4px;bottom:-4px;width:2px;background:var(--lead);border-radius:2px;opacity:.8}
+  .track .ghost{position:absolute;right:2px;top:50%;transform:translateY(-50%);height:14px;border:1.5px dashed #CFCBC2;border-right:none;border-radius:7px 0 0 7px}
+  .track .now{position:absolute;right:2px;top:50%;transform:translateY(-50%);height:14px;border-radius:7px 0 0 7px}
+  .gr.widen .now{background:var(--neg)} .gr.close .now{background:var(--pos)}
+  .track .dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:999px;border:2.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+  .gr.widen .dot{background:var(--neg)} .gr.close .dot{background:var(--pos)}
+  .verdict{text-align:left}
+  .verdict .v{font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;letter-spacing:-.01em}
+  .gr.widen .verdict .v{color:var(--neg)} .gr.close .verdict .v{color:var(--pos)}
+  .verdict .d{font-size:11.5px;color:var(--text-2);margin-top:3px;font-variant-numeric:tabular-nums}
+  .verdict .d b{color:var(--ink);font-weight:700}
+
+  /* EVIDENCE — option I, standings */
+  .legend{display:flex;gap:15px;align-items:center;margin-bottom:14px}
+  .legend span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);font-weight:500}
+  .lg{width:10px;height:10px;border-radius:999px}
+  .stages3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .scol{background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+  .sc-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+  .sdot{width:12px;height:12px;border-radius:4px;flex:0 0 12px}
+  .sc-name{font-size:15px;font-weight:700} .sc-desc{font-size:11px;color:var(--text-3)}
+  .row{padding:11px 18px} .row + .row{border-top:1px solid #F4F2EC}
+  .row-top{display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:10px}
+  .rk{width:21px;height:21px;border-radius:999px;background:#E1DED7;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .bn{font-size:13px;font-weight:600;color:var(--dim);display:flex;align-items:center;gap:6px}
+  .star{color:var(--lead);font-size:10px}
+  .you{font-size:8px;font-weight:800;letter-spacing:.05em;color:var(--focus-deep);background:#fff;border:1px solid var(--focus-edge);border-radius:999px;padding:2px 6px}
+  .vv{font-size:18px;font-weight:700;color:var(--dim)}
+  .bar{height:6px;background:#F0EEE8;border-radius:999px;overflow:hidden;margin:8px 0 0 34px}
+  .bar > i{display:block;height:100%;border-radius:999px;background:var(--dim-bar)}
+  .row.lead .rk{background:var(--lead)} .row.lead .bn{color:var(--text-2)} .row.lead .vv{color:#5E5A51} .row.lead .bar > i{background:var(--lead)}
+  .row.me{background:var(--focus-tint)} .row.me .rk{background:var(--focus)} .row.me .bn{color:var(--focus-deep);font-weight:700} .row.me .vv{color:var(--focus-deep)} .row.me .bar{background:#FBEFCB} .row.me .bar > i{background:var(--focus)}
+
+  /* CONCLUSION */
+  .bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:0;background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+  .bl-l{padding:22px 24px} .bl-r{padding:22px 24px;border-left:1px solid var(--border);background:#FDFCF9}
+  .bl-l h3{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+  .bl-l p{font-size:13.5px;color:var(--ink);line-height:1.55} .bl-l p b{font-weight:700}
+  .focus{margin-top:16px;padding:14px 16px;background:var(--focus-tint);border:1px solid var(--focus-edge);border-radius:12px;font-size:13px;line-height:1.5}
+  .focus b{color:var(--focus-deep)}
+  .bl-r h4{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);margin-bottom:14px}
+  .conv{margin-bottom:14px}.conv:last-child{margin-bottom:0}
+  .conv .q{font-size:12.5px;font-weight:600;margin-bottom:8px} .conv .q .leak{color:var(--neg);font-weight:700;font-size:10.5px;margin-left:5px}
+  .twin{display:flex;gap:9px} .twin .b{flex:1}
+  .twin .b .t{font-size:10.5px;color:var(--text-2);margin-bottom:3px}
+  .twin .b .tr{height:22px;border-radius:6px;background:#EFEDE7;position:relative;overflow:hidden}
+  .twin .b .tr>i{position:absolute;left:0;top:0;height:100%;border-radius:6px} .twin .b.me .tr>i{background:var(--focus)} .twin .b.them .tr>i{background:#C9C5BC}
+  .twin .b .pct{position:absolute;right:7px;top:0;height:100%;display:flex;align-items:center;font-size:11px;font-weight:700;font-family:var(--mono);color:var(--ink)}
+
+  .foot{font-size:10.5px;color:var(--text-3);margin-top:18px;text-align:right;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== INTRO ===================== -->
+  <div class="eyebrow">Brand tracker · South Africa · Q1 2026</div>
+  <div class="title">Aurora's Competitive Funnel Position</div>
+  <div class="sub">Q1 2026 vs Q4 2025 · Aurora vs Borealis, Cascade and Drift</div>
+  <div class="headline">Aurora is the clear <span class="hi">#2</span> — <span class="win">closing on Borealis in consideration</span>, but <span class="lose">losing ground</span> in awareness and usage.</div>
+  <div class="subhead">Look closer and the gap is <b>reach + trial, not preference</b> — once people know Aurora, it competes.</div>
+
+  <!-- ===================== HOOK: gap movement ===================== -->
+  <div class="seclab" style="margin-top:26px">How far Aurora trails Borealis — and which way it's moving</div>
+  <div class="gap-panel">
+    <div class="gp-head">
+      <div class="h-aur">Aurora</div>
+      <div class="h-scale">← further behind &nbsp;·&nbsp; dashed = Q4, solid = Q1</div>
+      <div class="h-lead">Level with Borealis →</div>
+    </div>
+
+    <!-- AWARENESS — gap 5.2 → 14.0 (widen). scale max 16: ghost 32.5%, now 87.5% -->
+    <div class="gr widen">
+      <div class="gr-stage"><span class="sdot" style="background:var(--stage-aware)"></span><div><div class="nm">Awareness</div><div class="ds">62% vs 76%</div></div></div>
+      <div class="track">
+        <div class="leadline"></div>
+        <div class="ghost" style="width:32.5%"></div>
+        <div class="now" style="width:87.5%"></div>
+        <div class="dot" style="right:87.5%"></div>
+      </div>
+      <div class="verdict"><div class="v">▼ Widened</div><div class="d"><b>14.0</b> behind · was 5.2</div></div>
+    </div>
+
+    <!-- CONSIDERATION — gap 10.0 → 8.4 (close). ghost 62.5%, now 52.5% -->
+    <div class="gr close">
+      <div class="gr-stage"><span class="sdot" style="background:var(--stage-consider)"></span><div><div class="nm">Consideration</div><div class="ds">32% vs 41%</div></div></div>
+      <div class="track">
+        <div class="leadline"></div>
+        <div class="ghost" style="width:62.5%"></div>
+        <div class="now" style="width:52.5%"></div>
+        <div class="dot" style="right:52.5%"></div>
+      </div>
+      <div class="verdict"><div class="v">▲ Closing</div><div class="d"><b>8.4</b> behind · was 10.0</div></div>
+    </div>
+
+    <!-- USED — gap 4.0 → 8.8 (widen). ghost 25%, now 55% -->
+    <div class="gr widen">
+      <div class="gr-stage"><span class="sdot" style="background:var(--stage-used)"></span><div><div class="nm">Used</div><div class="ds">16% vs 24%</div></div></div>
+      <div class="track">
+        <div class="leadline"></div>
+        <div class="ghost" style="width:25%"></div>
+        <div class="now" style="width:55%"></div>
+        <div class="dot" style="right:55%"></div>
+      </div>
+      <div class="verdict"><div class="v">▼ Widened</div><div class="d"><b>8.8</b> behind · was 4.0</div></div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- ===================== EVIDENCE ===================== -->
+  <div class="seclab">The standings · stage by stage</div>
+  <div class="legend"><span><span class="lg" style="background:var(--lead)"></span>Leader</span><span><span class="lg" style="background:var(--focus)"></span>Your brand (Aurora)</span><span><span class="lg" style="background:var(--dim)"></span>Others</span></div>
+
+  <div class="stages3">
+    <!-- AWARENESS -->
+    <div class="scol">
+      <div class="sc-head"><span class="sdot" style="background:var(--stage-aware)"></span><div><div class="sc-name">Awareness</div><div class="sc-desc">Have heard of it</div></div></div>
+      <div class="row lead"><div class="row-top"><span class="rk">1</span><span class="bn"><span class="star">★</span>Borealis</span><span class="vv num">76%</span></div><div class="bar"><i style="width:100%"></i></div></div>
+      <div class="row me"><div class="row-top"><span class="rk">2</span><span class="bn">Aurora <span class="you">YOU</span></span><span class="vv num">62%</span></div><div class="bar"><i style="width:82%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">3</span><span class="bn">Cascade</span><span class="vv num">44%</span></div><div class="bar"><i style="width:58%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">4</span><span class="bn">Drift</span><span class="vv num">30%</span></div><div class="bar"><i style="width:40%"></i></div></div>
+    </div>
+    <!-- CONSIDERATION -->
+    <div class="scol">
+      <div class="sc-head"><span class="sdot" style="background:var(--stage-consider)"></span><div><div class="sc-name">Consideration</div><div class="sc-desc">Would consider buying</div></div></div>
+      <div class="row lead"><div class="row-top"><span class="rk">1</span><span class="bn"><span class="star">★</span>Borealis</span><span class="vv num">41%</span></div><div class="bar"><i style="width:100%"></i></div></div>
+      <div class="row me"><div class="row-top"><span class="rk">2</span><span class="bn">Aurora <span class="you">YOU</span></span><span class="vv num">32%</span></div><div class="bar"><i style="width:78%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">3</span><span class="bn">Cascade</span><span class="vv num">20%</span></div><div class="bar"><i style="width:49%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">4</span><span class="bn">Drift</span><span class="vv num">12%</span></div><div class="bar"><i style="width:29%"></i></div></div>
+    </div>
+    <!-- USED -->
+    <div class="scol">
+      <div class="sc-head"><span class="sdot" style="background:var(--stage-used)"></span><div><div class="sc-name">Used</div><div class="sc-desc">Have bought or used</div></div></div>
+      <div class="row lead"><div class="row-top"><span class="rk">1</span><span class="bn"><span class="star">★</span>Borealis</span><span class="vv num">24%</span></div><div class="bar"><i style="width:100%"></i></div></div>
+      <div class="row me"><div class="row-top"><span class="rk">2</span><span class="bn">Aurora <span class="you">YOU</span></span><span class="vv num">16%</span></div><div class="bar"><i style="width:67%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">3</span><span class="bn">Cascade</span><span class="vv num">10%</span></div><div class="bar"><i style="width:42%"></i></div></div>
+      <div class="row"><div class="row-top"><span class="rk">4</span><span class="bn">Drift</span><span class="vv num">4%</span></div><div class="bar"><i style="width:17%"></i></div></div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- ===================== DIAGNOSIS ===================== -->
+  <div class="seclab">The diagnosis · reach + trial, not preference</div>
+  <div class="diag">
+
+    <!-- REACH, NOT PREFERENCE -->
+    <div class="dp reach">
+      <div class="dp-tag">● The awareness gap</div>
+      <h3>It's reach, not rejection.</h3>
+      <div class="ctx">Among the 115 people who already know <b>both</b> brands — the fair fight, awareness removed.</div>
+      <div class="h2h">
+        <div class="lbl"><span>Would consider</span><span class="gp">gap −5.2</span></div>
+        <div class="vs">
+          <div class="b me"><i style="width:49.6%"></i><span class="nm">Aurora</span><span class="pct" style="color:var(--focus-deep)">49.6%</span></div>
+          <div class="b them"><i style="width:54.8%"></i><span class="nm">Borealis</span><span class="pct" style="color:#4B5246">54.8%</span></div>
+        </div>
+      </div>
+      <div class="callout">Across <i>everyone</i> the consideration gap is <b>−8.4</b>. Among people who know both, it's just <b>−5.2</b> — and closing. <b>Once people know Aurora, it competes.</b>
+        <span class="chip">Rejection among aware: <b>47.7%</b> — as liked as Borealis (46.3%)</span>
+      </div>
+    </div>
+
+    <!-- THE TRIAL LEAK -->
+    <div class="dp trial">
+      <div class="dp-tag">● The usage gap</div>
+      <h3>The real leak is trial.</h3>
+      <div class="ctx">Of those who consider each brand, the share who go on to actually buy or use it.</div>
+      <div class="h2h">
+        <div class="lbl"><span>Consider → used</span><span class="gp">gap −12</span></div>
+        <div class="vs">
+          <div class="b me"><i style="width:48%"></i><span class="nm">Aurora</span><span class="pct" style="color:var(--focus-deep)">48%</span></div>
+          <div class="b them"><i style="width:60%"></i><span class="nm">Borealis</span><span class="pct" style="color:#4B5246">60%</span></div>
+        </div>
+      </div>
+      <div class="women">Sharpest with <b>women</b>: Aurora trails Borealis by <b>−14pts</b> on consideration there, vs −5pts among men.</div>
+      <div class="callout">Lift Aurora's trial conversion to Borealis's level and usage rises <b>~+3.8pp</b> (15.6 → ~19.4%) — closing most of the gap. <i>Projection, held at today's consideration.</i></div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- ===================== TAKEAWAYS ===================== -->
+  <div class="seclab">What this means</div>
+  <div class="takes">
+    <div class="tk"><div class="n">01</div><p>Aurora is a stable <b>#2</b> and <b>as liked as the leader</b> — clear of Cascade and Drift, with demand as loyal as Borealis's.</p></div>
+    <div class="tk"><div class="n">02</div><p>The consideration gap is mostly <b>reach</b>: once people know both brands, Aurora nearly matches Borealis — so buy awareness.</p></div>
+    <div class="tk"><div class="n">03</div><p>The fixable weakness is <b>trial</b>, sharpest among <b>women</b> — and it's worth roughly <b>+3.8pp</b> of usage.</p></div>
+  </div>
+
+  <div class="foot">Gap = points behind Borealis · head-to-head on n=115 aware of both · bars in standings scaled within each stage (leader = full) · % of all surveyed · 250/wave · unweighted</div>
+</div>
+</body>
+</html>
