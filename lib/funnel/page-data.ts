@@ -22,6 +22,7 @@ export type RaceLane = {
   auroraNow: number
   borealisNow: number
   gapNow: number
+  gapWas: number
   narrowed: boolean
   verdict: string
   note: string
@@ -58,7 +59,9 @@ export function getPageData() {
     const bQ4 = f.Borealis[Q4][s.key].pct as number
     const bQ1 = f.Borealis[Q1][s.key].pct as number
     const gapNow = r0(bQ1 - aQ1)
+    const gapWas = r0(bQ4 - aQ4)
     const narrowed = bQ1 - aQ1 < bQ4 - aQ4
+    const delta = Math.abs(gapNow - gapWas)
     return {
       key: s.key,
       label: s.label,
@@ -66,9 +69,10 @@ export function getPageData() {
       auroraNow: r0(aQ1),
       borealisNow: r0(bQ1),
       gapNow,
+      gapWas,
       narrowed,
-      verdict: narrowed ? '◂ Gap narrowed' : '▸ Gap widened',
-      note: narrowed ? 'Aurora closed in — bright spot' : 'Borealis pulled ahead',
+      verdict: narrowed ? `◂ Narrowed by ${delta} pts` : `▸ Widened by ${delta} pts`,
+      note: `was ${gapWas} behind last quarter`,
       pos: positions(aQ4, aQ1, bQ4, bQ1),
     }
   })
