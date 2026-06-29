@@ -116,6 +116,15 @@ problem (buy salience) and the usage side a **trial** problem, sharpest among **
 gains a two-panel "diagnosis" section (reach-not-preference + the trial leak). Note: the
 age-by-consider cut stays low-confidence — the trustworthy demographic signal is gender, not age.
 
+### 2026-06-29 · App shell: an admin product with a sidebar and two routes
+Wrap the app in an admin shell (left sidebar + top bar) so it reads as a real brand-intelligence
+product, not a single bare page. Sidebar: Timelaps brand, an **Analysis** group with
+**Competitive Funnel** (`/`, Part 1) and **AI Analyst** (`/analyst`, Part 2), a muted Settings
+stub, and a user footer; top bar carries a breadcrumb + a Q1 2026 wave pill. The shell
+(`components/shell/AppShell.tsx`, a client component using `usePathname` for the active link) lives
+in the root layout so it persists across routes. `/analyst` is an intentional stub for now (ask
+box + example questions + a "design in progress" note) — the real Part 2 wiring is next.
+
 ## Open
 
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether

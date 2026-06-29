@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Rethink_Sans, Fragment_Mono } from 'next/font/google'
+import { AppShell } from '@/components/shell/AppShell'
 import './globals.css'
 
 // Timelaps brand fonts (see DESIGN.md): Rethink Sans for everything, Fragment Mono for labels.
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${rethink.variable} ${fragment.variable}`}>
-      <body>{children}</body>
+      <body>
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   )
 }

@@ -5,7 +5,7 @@ export default function Page() {
   const { race, standings, diagnosis } = getPageData()
 
   return (
-    <main className="wrap">
+    <>
       {/* INTRO */}
       <div className="eyebrow">Brand tracker · South Africa · Q1 2026</div>
       <div className="title">Aurora&apos;s Competitive Funnel Position</div>
@@ -175,6 +175,6 @@ export default function Page() {
         Gap = points behind Borealis · head-to-head on n=115 aware of both · bars in standings scaled
         within each stage (leader = full) · % of all surveyed · 250/wave · unweighted
       </div>
-    </main>
+    </>
   )
 }
