@@ -18,9 +18,9 @@ a{color:inherit;text-decoration:none}
 /* STAGE ICON — a little frosted, greyscale icon-badge per stage. The glyph (eye / magnifier /
    bag) tells the stage apart; colour is reserved for the things that carry meaning (Aurora,
    the leader, movement). */
-.stage-ic{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px}
-.stage-ic svg{width:16px;height:16px;fill:none;stroke:#6B665E;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.stage-ic.sm{width:16px;height:16px} .stage-ic.sm svg{width:13px;height:13px}
+.stage-ic{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;border:1px solid rgba(120,116,108,.32)}
+.stage-ic svg{width:13px;height:13px;fill:none;stroke:#6B665E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stage-ic.sm{width:18px;height:18px;border-radius:6px} .stage-ic.sm svg{width:11px;height:11px}
 .lbl-ic{display:inline-flex;align-items:center;gap:7px}
 
 /* ===== ADMIN SHELL ===== */
