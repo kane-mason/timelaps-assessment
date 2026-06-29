@@ -86,8 +86,8 @@ a{color:inherit;text-decoration:none}
 .lane-stage{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700}
 .lane-stage .sdot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
 .track{position:relative;height:34px}
-.link{position:absolute;top:50%;height:5px;transform:translateY(-50%);border-radius:999px;left:var(--an);right:var(--bnR);z-index:1;background:#D2CEC5}
-.lane.widen{--linkcolor:var(--neg)} .lane.narrow{--linkcolor:var(--pos)}
+.link{position:absolute;top:50%;height:3px;transform:translateY(-50%);border-radius:999px;left:var(--an);right:var(--bnR);z-index:1;background:#D8D4CB}
+.lane.widen{--linkcolor:rgba(194,82,106,.82)} .lane.narrow{--linkcolor:rgba(22,163,74,.78)}
 .dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:999px;border:3px solid var(--surface-raised);z-index:2;display:flex;align-items:center;justify-content:center}
 .d-aur{width:20px;height:20px;background:var(--focus);left:var(--an);--from:var(--aw);--to:var(--an);box-shadow:0 1px 4px rgba(0,0,0,.14)}
 .d-bor{width:22px;height:22px;background:var(--lead);left:var(--bn);--from:var(--bw);--to:var(--bn);color:#fff;font-size:11px;box-shadow:0 1px 4px rgba(22,120,56,.25)}
@@ -108,7 +108,7 @@ a{color:inherit;text-decoration:none}
 .race.play .verdict .s{animation:fade 600ms ease calc(var(--dur) - 120ms) both}
 @keyframes roll{from{left:var(--from)}to{left:var(--to)}}
 @keyframes connect{from{left:var(--aw);right:var(--bwR)}to{left:var(--an);right:var(--bnR)}}
-@keyframes colorize{from{background:#D2CEC5}to{background:var(--linkcolor)}}
+@keyframes colorize{from{background:#D8D4CB}to{background:var(--linkcolor)}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){
   .race.play .d-aur,.race.play .d-bor,.race.play .link,.race.play .gaplab,.race.play .verdict .v,.race.play .verdict .s{animation:none}
