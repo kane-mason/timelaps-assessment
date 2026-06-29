@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Section 1 — the chase (focused)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-edge:#F4C657;
+    --lead:#16A34A; --lead-tint:#E9F7EE;
+    --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+    --pos:#16A34A; --neg:#C2526A; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:56px 24px}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  .ch-kick{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+  .ch-kick b{color:var(--ink);font-weight:600}
+  .ch-title{font-size:19px;font-weight:700;letter-spacing:-.018em;line-height:1.2;margin-top:6px;color:var(--ink)}
+  .ch-read{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-top:6px;max-width:680px}
+  .ch-read b{color:var(--ink);font-weight:600}
+
+  /* the race */
+  .race{margin-top:30px}
+  .finish-head{display:grid;grid-template-columns:150px 1fr 150px;gap:24px;padding:0 2px 6px}
+  .finish-head .fh{grid-column:2;text-align:right;font-size:10px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);padding-right:6px}
+  .lane{display:grid;grid-template-columns:150px 1fr 152px;align-items:center;gap:24px;padding:30px 2px}
+  .lane + .lane{border-top:1px solid var(--border)}
+  .lane-stage{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700}
+  .lane-stage .sdot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+
+  .track{position:relative;height:40px}
+  .track .laneline{position:absolute;left:0;right:46px;top:50%;height:0;border-top:2px dotted #D8D4CB;transform:translateY(-50%)}
+  /* leader pinned at the front (right) */
+  .leader{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;width:46px}
+  .leader .flag{width:30px;height:30px;border-radius:999px;background:var(--lead-tint);border:2px solid var(--lead);display:flex;align-items:center;justify-content:center;color:var(--lead);font-size:14px}
+  .leader .ltag{font-size:9px;font-weight:700;color:var(--lead);margin-top:4px;font-family:var(--mono)}
+  /* movement arrow from where Aurora was → where it is now */
+  .arrow{position:absolute;top:50%;height:4px;transform:translateY(-50%);border-radius:2px;opacity:.9}
+  .lane.gain .arrow{background:var(--pos)} .lane.lose .arrow{background:var(--neg)}
+  .arrow::after{content:"";position:absolute;top:50%;transform:translateY(-50%);border:6px solid transparent}
+  .lane.gain .arrow.r::after{right:-9px;border-left-color:var(--pos)} /* points right, toward leader */
+  .lane.lose .arrow.l::after{left:-9px;border-right-color:var(--neg)} /* points left, away */
+  /* runners */
+  .ghost{position:absolute;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:999px;background:var(--surface-base);border:2px dashed #C3BEB3;z-index:2}
+  .runner{position:absolute;top:50%;transform:translate(-50%,-50%);width:19px;height:19px;border-radius:999px;background:var(--focus);border:3px solid var(--surface-raised);box-shadow:0 1px 4px rgba(0,0,0,.12);z-index:3}
+  .runner .you{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;letter-spacing:.04em;color:var(--focus-deep);white-space:nowrap}
+  .glab{position:absolute;top:calc(50% + 16px);transform:translateX(-50%);font-size:10px;color:var(--text-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .nlab{position:absolute;top:calc(50% + 16px);transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .verdict{text-align:right}
+  .verdict .v{font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:6px}
+  .lane.gain .verdict .v{color:var(--pos)} .lane.lose .verdict .v{color:var(--neg)}
+  .verdict .s{font-size:11px;font-weight:500;color:var(--text-3);margin-top:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="ch-kick"><b>01</b> &nbsp;·&nbsp; The chase</div>
+  <div class="ch-title">Aurora is chasing Borealis — gaining on one stage, dropping back on two</div>
+  <div class="ch-read"><b>Borealis</b> leads every stage (the ★ at the front). Each lane shows how far <b>Aurora</b> is behind — the faint ring is where it stood last quarter, the solid dot is now. An arrow toward the leader means catching up; away means losing ground.</div>
+
+  <div class="race">
+    <div class="finish-head"><div class="fh">1st place — Borealis ▸</div></div>
+
+    <!-- AWARENESS: was 5 behind → now 14 behind = losing ground -->
+    <div class="lane lose">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-aware)"></span>Awareness</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">76%</div></div>
+        <div class="arrow l" style="left:18%;width:45%"></div>
+        <div class="ghost" style="left:63%"></div>
+        <div class="runner" style="left:18%"><span class="you">AURORA</span></div>
+        <div class="glab" style="left:63%">was 5 back</div>
+        <div class="nlab" style="left:18%">now 14 back</div>
+      </div>
+      <div class="verdict"><div class="v">◂ Losing ground</div><div class="s">gap nearly tripled</div></div>
+    </div>
+
+    <!-- CONSIDERATION: was 10 → now 8 = gaining -->
+    <div class="lane gain">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-consider)"></span>Consideration</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">41%</div></div>
+        <div class="arrow r" style="left:38%;width:10%"></div>
+        <div class="ghost" style="left:38%"></div>
+        <div class="runner" style="left:48%"><span class="you">AURORA</span></div>
+        <div class="glab" style="left:38%">was 10 back</div>
+        <div class="nlab" style="left:48%">now 8 back</div>
+      </div>
+      <div class="verdict"><div class="v">Gaining ▸</div><div class="s">the one bright spot</div></div>
+    </div>
+
+    <!-- USED: was 4 → now 9 = losing ground -->
+    <div class="lane lose">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-used)"></span>Used</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">24%</div></div>
+        <div class="arrow l" style="left:43%;width:25%"></div>
+        <div class="ghost" style="left:68%"></div>
+        <div class="runner" style="left:43%"><span class="you">AURORA</span></div>
+        <div class="glab" style="left:68%">was 4 back</div>
+        <div class="nlab" style="left:43%">now 9 back</div>
+      </div>
+      <div class="verdict"><div class="v">◂ Losing ground</div><div class="s">gap more than doubled</div></div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

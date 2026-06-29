@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Section 1 — the chase (animated)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-edge:#F4C657;
+    --lead:#16A34A; --lead-tint:#E9F7EE;
+    --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+    --pos:#16A34A; --neg:#C2526A; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+    --dur:1100ms; --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:56px 24px}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  .head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  .ch-kick{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+  .ch-kick b{color:var(--ink);font-weight:600}
+  .ch-title{font-size:19px;font-weight:700;letter-spacing:-.018em;line-height:1.2;margin-top:6px;color:var(--ink)}
+  .ch-read{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-top:6px;max-width:660px}
+  .ch-read b{color:var(--ink);font-weight:600}
+  .replay{flex:0 0 auto;margin-top:2px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--focus-deep);background:var(--surface-raised);border:1px solid var(--focus-edge);border-radius:999px;padding:8px 14px;cursor:pointer}
+  .replay:hover{background:#FFF8E8}
+
+  .race{margin-top:30px}
+  .finish-head{display:grid;grid-template-columns:150px 1fr 152px;gap:24px;padding:0 2px 6px}
+  .finish-head .fh{grid-column:2;text-align:right;font-size:10px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);padding-right:6px}
+  .lane{display:grid;grid-template-columns:150px 1fr 152px;align-items:center;gap:24px;padding:30px 2px}
+  .lane + .lane{border-top:1px solid var(--border)}
+  .lane-stage{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700}
+  .lane-stage .sdot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+
+  .track{position:relative;height:40px}
+  .track .laneline{position:absolute;left:0;right:46px;top:50%;height:0;border-top:2px dotted #D8D4CB;transform:translateY(-50%)}
+  .leader{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;width:46px}
+  .leader .flag{width:30px;height:30px;border-radius:999px;background:var(--lead-tint);border:2px solid var(--lead);display:flex;align-items:center;justify-content:center;color:var(--lead);font-size:14px}
+  .leader .ltag{font-size:9px;font-weight:700;color:var(--lead);margin-top:4px;font-family:var(--mono)}
+
+  /* the coloured trail Aurora leaves between last quarter and now */
+  .trail{position:absolute;top:50%;height:4px;transform:translateY(-50%) scaleX(0);border-radius:2px;left:var(--tleft);width:var(--twidth)}
+  .lane.gain .trail{background:var(--pos);transform-origin:left} .lane.lose .trail{background:var(--neg);transform-origin:right}
+  .trail::after{content:"";position:absolute;top:50%;transform:translateY(-50%);border:6px solid transparent}
+  .lane.gain .trail::after{right:-9px;border-left-color:var(--pos)} /* arrowhead toward leader */
+  .lane.lose .trail::after{left:-9px;border-right-color:var(--neg)} /* arrowhead away */
+
+  .ghost{position:absolute;top:50%;left:var(--was);transform:translate(-50%,-50%);width:13px;height:13px;border-radius:999px;background:var(--surface-base);border:2px dashed #C3BEB3;z-index:2}
+  .runner{position:absolute;top:50%;left:var(--now);transform:translate(-50%,-50%);width:19px;height:19px;border-radius:999px;background:var(--focus);border:3px solid var(--surface-raised);box-shadow:0 1px 4px rgba(0,0,0,.14);z-index:3}
+  .runner .you{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;letter-spacing:.04em;color:var(--focus-deep);white-space:nowrap}
+  .glab{position:absolute;top:calc(50% + 16px);left:var(--was);transform:translateX(-50%);font-size:10px;color:var(--text-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .nlab{position:absolute;top:calc(50% + 16px);left:var(--now);transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;opacity:0}
+
+  .verdict{text-align:right}
+  .verdict .v{font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:6px;opacity:0}
+  .lane.gain .verdict .v{color:var(--pos)} .lane.lose .verdict .v{color:var(--neg)}
+  .verdict .s{font-size:11px;font-weight:500;color:var(--text-3);margin-top:3px;opacity:0}
+
+  /* ---- animation: runner slides was→now, trail draws, labels/verdict fade in, staggered ---- */
+  .race.play .runner{animation:slide var(--dur) var(--ease) var(--d) both}
+  .race.play .trail{animation:draw var(--dur) var(--ease) var(--d) both}
+  .race.play .nlab,.race.play .verdict .v{animation:fade 500ms ease calc(var(--d) + var(--dur) - 250ms) both}
+  .race.play .verdict .s{animation:fade 500ms ease calc(var(--d) + var(--dur) - 50ms) both}
+  @keyframes slide{from{left:var(--was)}to{left:var(--now)}}
+  @keyframes draw{from{transform:translateY(-50%) scaleX(0)}to{transform:translateY(-50%) scaleX(1)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  @media (prefers-reduced-motion: reduce){
+    .race.play .runner,.race.play .trail,.race.play .nlab,.race.play .verdict .v,.race.play .verdict .s{animation:none}
+    .trail{transform:translateY(-50%) scaleX(1)} .nlab,.verdict .v,.verdict .s{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head-row">
+    <div>
+      <div class="ch-kick"><b>01</b> &nbsp;·&nbsp; The chase</div>
+      <div class="ch-title">Aurora is chasing Borealis — gaining on one stage, dropping back on two</div>
+      <div class="ch-read"><b>Borealis</b> leads every stage (the ★ at the front). Each lane starts where <b>Aurora</b> stood last quarter and moves to today. Toward the leader = catching up; away = losing ground.</div>
+    </div>
+    <button class="replay" id="replay">▸ Replay</button>
+  </div>
+
+  <div class="race" id="race">
+    <div class="finish-head"><div class="fh">1st place — Borealis ▸</div></div>
+
+    <!-- AWARENESS: was 5 back → now 14 back = losing ground -->
+    <div class="lane lose" style="--was:63%;--now:18%;--tleft:18%;--twidth:45%;--d:0ms">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-aware)"></span>Awareness</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">76%</div></div>
+        <div class="trail"></div>
+        <div class="ghost"></div>
+        <div class="runner"><span class="you">AURORA</span></div>
+        <div class="glab">was 5 back</div>
+        <div class="nlab">now 14 back</div>
+      </div>
+      <div class="verdict"><div class="v">◂ Losing ground</div><div class="s">gap nearly tripled</div></div>
+    </div>
+
+    <!-- CONSIDERATION: was 10 back → now 8 back = gaining -->
+    <div class="lane gain" style="--was:38%;--now:48%;--tleft:38%;--twidth:10%;--d:0ms">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-consider)"></span>Consideration</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">41%</div></div>
+        <div class="trail"></div>
+        <div class="ghost"></div>
+        <div class="runner"><span class="you">AURORA</span></div>
+        <div class="glab">was 10 back</div>
+        <div class="nlab">now 8 back</div>
+      </div>
+      <div class="verdict"><div class="v">Gaining ▸</div><div class="s">the one bright spot</div></div>
+    </div>
+
+    <!-- USED: was 4 back → now 9 back = losing ground -->
+    <div class="lane lose" style="--was:68%;--now:43%;--tleft:43%;--twidth:25%;--d:0ms">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-used)"></span>Used</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="leader"><div class="flag">★</div><div class="ltag">24%</div></div>
+        <div class="trail"></div>
+        <div class="ghost"></div>
+        <div class="runner"><span class="you">AURORA</span></div>
+        <div class="glab">was 4 back</div>
+        <div class="nlab">now 9 back</div>
+      </div>
+      <div class="verdict"><div class="v">◂ Losing ground</div><div class="s">gap more than doubled</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const race = document.getElementById('race');
+  const play = () => { race.classList.remove('play'); void race.offsetWidth; race.classList.add('play'); };
+  new IntersectionObserver((es, o) => { es.forEach(e => { if (e.isIntersecting) { play(); } }); }, { threshold: .35 }).observe(race);
+  document.getElementById('replay').addEventListener('click', play);
+</script>
+</body>
+</html>
