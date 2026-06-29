@@ -17,3 +17,9 @@ node_modules/
 
 # Internal planning / strategy notes — never share with assessors
 internal/
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
