@@ -13,10 +13,15 @@ the trial leak) → **04 the takeaway**.
 
 - **page-v7.html** — the full page in that order, restrained editorial chapter headers, plain
   language. The current full-page lead.
-- **section1-chase-anim.html** — ⭐ **pinned** treatment for section 01: a **race**. Borealis is
-  pinned at "1st place" (green ★, front); Aurora is the amber runner; a dashed ring marks last
-  quarter; on view the runner slides from there to now (all lanes together), red where it drops
-  back from the leader, green where it gains. `section1-chase.html` is the static version.
+### Section 01 — candidate treatments (the movement, animated)
+- **section1-chase-anim.html** — ⭐ Borealis pinned at "1st place" (green ★, front); Aurora the
+  amber runner; a dashed ring marks last quarter; on view the runner slides from there to now
+  (all lanes together), red where it drops back, green where it gains. `section1-chase.html` is
+  the static version.
+- **section1-race-both.html** — ⭐ both cars move: Aurora *and* Borealis roll from last quarter
+  (dashed) to now over ~2.8s, so you see **Borealis is the one accelerating** (long green trails
+  on awareness/used) while Aurora stalls. Each lane is **normalized + truncated to its own range**
+  so small moves are visible; exact gaps live in the verdict text.
 - **page-v8.html** — page-v7 with section 01 as an earlier timeline (superseded by the chase).
 - **page-v2…v6.html** — earlier iterations of the hook/diagnosis; kept for the trail.
 - **page-final.html** — pre-re-diagnosis lead; reference only.

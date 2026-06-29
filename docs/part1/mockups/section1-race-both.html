@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Section 1 — the race (both cars move)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-edge:#F4C657;
+    --lead:#16A34A; --lead-tint:#E9F7EE; --lead-deep:#0E7A38;
+    --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+    --pos:#16A34A; --neg:#C2526A; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+    --dur:2800ms; --ease:cubic-bezier(.33,0,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:56px 24px}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  .head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  .ch-kick{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+  .ch-kick b{color:var(--ink);font-weight:600}
+  .ch-title{font-size:19px;font-weight:700;letter-spacing:-.018em;line-height:1.2;margin-top:6px;color:var(--ink)}
+  .ch-read{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-top:6px;max-width:680px}
+  .ch-read b{color:var(--ink);font-weight:600}
+  .replay{flex:0 0 auto;margin-top:2px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--focus-deep);background:var(--surface-raised);border:1px solid var(--focus-edge);border-radius:999px;padding:8px 14px;cursor:pointer}
+  .replay:hover{background:#FFF8E8}
+
+  .race{margin-top:30px}
+  .axis-head{display:grid;grid-template-columns:150px 1fr 168px;gap:24px;padding:0 2px 8px}
+  .axis-head .ah{grid-column:2;display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+  .lane{display:grid;grid-template-columns:150px 1fr 168px;align-items:center;gap:24px;padding:34px 2px}
+  .lane + .lane{border-top:1px solid var(--border)}
+  .lane-stage{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700}
+  .lane-stage .sdot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+
+  .track{position:relative;height:40px}
+  .track .laneline{position:absolute;left:0;right:0;top:50%;height:0;border-top:2px dotted #DEDAD1;transform:translateY(-50%)}
+
+  /* a car: ghost (Q4) + drawn trail + runner (Q1) */
+  .ghost{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:999px;z-index:2;background:var(--surface-base)}
+  .g-aur{width:12px;height:12px;border:2px dashed #E3C06A;left:var(--aw)}
+  .g-bor{width:12px;height:12px;border:2px dashed #9FD3B4;left:var(--bw)}
+  .trail{position:absolute;top:50%;height:3px;transform:translateY(-50%) scaleX(0);transform-origin:left;border-radius:2px;border-radius:2px}
+  .t-aur{left:var(--aw);width:var(--awidth);background:var(--focus)}
+  .t-bor{left:var(--bw);width:var(--bwidth);background:var(--lead)}
+  .runner{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:999px;border:3px solid var(--surface-raised);z-index:3;display:flex;align-items:center;justify-content:center}
+  .r-aur{width:20px;height:20px;background:var(--focus);left:var(--an);box-shadow:0 1px 4px rgba(0,0,0,.14)}
+  .r-bor{width:22px;height:22px;background:var(--lead);left:var(--bn);color:#fff;font-size:11px;box-shadow:0 1px 4px rgba(22,120,56,.25)}
+  .rlab{position:absolute;top:calc(50% + 17px);transform:translateX(-50%);font-size:10.5px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;opacity:0}
+  .rlab.aur{left:var(--an);color:var(--focus-deep)} .rlab.bor{left:var(--bn);color:var(--lead-deep)}
+  .tag{position:absolute;top:calc(50% - 26px);transform:translateX(-50%);font-size:9px;font-weight:800;letter-spacing:.04em;white-space:nowrap;opacity:0}
+  .tag.aur{left:var(--an);color:var(--focus-deep)} .tag.bor{left:var(--bn);color:var(--lead-deep)}
+
+  .verdict{text-align:right}
+  .verdict .v{font-size:13.5px;font-weight:800;opacity:0}
+  .lane.widen .verdict .v{color:var(--neg)} .lane.narrow .verdict .v{color:var(--pos)}
+  .verdict .s{font-size:11px;font-weight:500;color:var(--text-3);margin-top:3px;opacity:0}
+
+  /* animation: both cars roll Q4→Q1 together over a few seconds; labels fade in as they settle */
+  .race.play .trail{animation:draw var(--dur) var(--ease) both}
+  .race.play .runner{animation:roll var(--dur) var(--ease) both}
+  .race.play .rlab,.race.play .tag,.race.play .verdict .v{animation:fade 600ms ease calc(var(--dur) - 350ms) both}
+  .race.play .verdict .s{animation:fade 600ms ease calc(var(--dur) - 150ms) both}
+  @keyframes draw{from{transform:translateY(-50%) scaleX(0)}to{transform:translateY(-50%) scaleX(1)}}
+  @keyframes roll{from{left:var(--from)}to{left:var(--to)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  /* per-car start/end for the roll keyframe */
+  .r-aur{--from:var(--aw);--to:var(--an)} .r-bor{--from:var(--bw);--to:var(--bn)}
+
+  @media (prefers-reduced-motion: reduce){
+    .race.play .trail,.race.play .runner,.race.play .rlab,.race.play .tag,.race.play .verdict .v,.race.play .verdict .s{animation:none}
+    .trail{transform:translateY(-50%) scaleX(1)} .rlab,.tag,.verdict .v,.verdict .s{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head-row">
+    <div>
+      <div class="ch-kick"><b>01</b> &nbsp;·&nbsp; The race</div>
+      <div class="ch-title">Both brands are moving — but Borealis is pulling away at the ends</div>
+      <div class="ch-read">Each lane is a race from <b>last quarter</b> (dashed) to <b>now</b> (solid). Each track is zoomed to its own stage so the moves are visible — read the % on each dot, not the absolute position. Watch <b>Borealis</b> (green ★) surge on awareness and usage while <b>Aurora</b> (amber) barely moves; on consideration, Aurora gains faster.</div>
+    </div>
+    <button class="replay" id="replay">▸ Replay</button>
+  </div>
+
+  <div class="race" id="race">
+    <div class="axis-head"><div class="ah"><span>◦ dashed = last quarter &nbsp;·&nbsp; ● solid = now</span><span>each lane zoomed to its stage ▸</span></div></div>
+
+    <!-- AWARENESS: Aurora 61.2→62.0 ; Borealis 66.4→76.0 ; gap 5→14 (widen) -->
+    <div class="lane widen" style="--aw:17.9%;--an:21.0%;--awidth:3.1%;--bw:38.3%;--bn:76.2%;--bwidth:37.9%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-aware)"></span>Awareness</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="trail t-aur"></div><div class="trail t-bor"></div>
+        <div class="ghost g-aur"></div><div class="ghost g-bor"></div>
+        <div class="runner r-aur"></div><div class="runner r-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="rlab aur">62%</span><span class="rlab bor">76%</span>
+      </div>
+      <div class="verdict"><div class="v">Gap widened to 14</div><div class="s">Borealis surged +10; Aurora flat</div></div>
+    </div>
+
+    <!-- CONSIDERATION: Aurora 29.2→32.4 ; Borealis 39.2→40.8 ; gap 10→8 (narrow) -->
+    <div class="lane narrow" style="--aw:17.2%;--an:33.7%;--awidth:16.5%;--bw:68.6%;--bn:76.8%;--bwidth:8.2%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-consider)"></span>Consideration</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="trail t-aur"></div><div class="trail t-bor"></div>
+        <div class="ghost g-aur"></div><div class="ghost g-bor"></div>
+        <div class="runner r-aur"></div><div class="runner r-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="rlab aur">32%</span><span class="rlab bor">41%</span>
+      </div>
+      <div class="verdict"><div class="v">Gap narrowed to 8</div><div class="s">Aurora gained faster — the bright spot</div></div>
+    </div>
+
+    <!-- USED: Aurora 14.8→15.6 ; Borealis 18.8→24.4 ; gap 4→9 (widen) -->
+    <div class="lane widen" style="--aw:17.3%;--an:22.2%;--awidth:4.9%;--bw:42.1%;--bn:76.7%;--bwidth:34.6%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-used)"></span>Used</div>
+      <div class="track">
+        <div class="laneline"></div>
+        <div class="trail t-aur"></div><div class="trail t-bor"></div>
+        <div class="ghost g-aur"></div><div class="ghost g-bor"></div>
+        <div class="runner r-aur"></div><div class="runner r-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="rlab aur">16%</span><span class="rlab bor">24%</span>
+      </div>
+      <div class="verdict"><div class="v">Gap widened to 9</div><div class="s">Borealis pulled away +6</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const race = document.getElementById('race');
+  const play = () => { race.classList.remove('play'); void race.offsetWidth; race.classList.add('play'); };
+  new IntersectionObserver((es, o) => { es.forEach(e => { if (e.isIntersecting) play(); }); }, { threshold: .35 }).observe(race);
+  document.getElementById('replay').addEventListener('click', play);
+</script>
+</body>
+</html>
