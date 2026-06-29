@@ -15,10 +15,12 @@ body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-we
 .num{font-variant-numeric:tabular-nums}
 a{color:inherit;text-decoration:none}
 
-/* STAGE ICON — a little colour-coded icon-badge per stage (shape differentiates, not just colour) */
-.stage-ic{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px}
-.stage-ic svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.stage-ic.aware{background:var(--stage-aware)} .stage-ic.consider{background:var(--stage-consider)} .stage-ic.used{background:var(--stage-used)}
+/* STAGE ICON — a little frosted-glass icon-badge per stage (shape + washed colour, see-through) */
+.stage-ic{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;border:1px solid;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.stage-ic svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stage-ic.aware{background:rgba(245,158,11,.16);border-color:rgba(245,158,11,.4)} .stage-ic.aware svg{stroke:#B5710A}
+.stage-ic.consider{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.45)} .stage-ic.consider svg{stroke:#1B6E9E}
+.stage-ic.used{background:rgba(52,209,127,.20);border-color:rgba(52,209,127,.5)} .stage-ic.used svg{stroke:#0E7A38}
 
 /* ===== ADMIN SHELL ===== */
 .app{display:flex;min-height:100vh}
