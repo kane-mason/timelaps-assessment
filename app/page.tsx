@@ -148,26 +148,25 @@ export default function Page() {
         <div className="ch-kick">
           <b>04</b> &nbsp;·&nbsp; The takeaway
         </div>
-        <div className="ch-title">What to do about it</div>
+        <div className="ch-title">Recommended actions</div>
+        <div className="ch-read">Three moves for the quarter — in priority order.</div>
       </div>
-      <div className="takes">
-        <div className="tk">
-          <div className="n">01 — Hold</div>
-          <h5>A strong, well-liked #2</h5>
-          <p>Clear of Cascade and Drift, demand as loyal as the leader&apos;s.</p>
+      <div className="acts">
+        <div className="act">
+          <div className="act-top"><span className="check" /><span className="act-verb">01 · Hold</span></div>
+          <h5>Protect a well-liked #2</h5>
+          <p>Clear of Cascade and Drift, with demand as loyal as the leader&apos;s — defend it.</p>
         </div>
-        <div className="tk">
-          <div className="n">02 — Buy</div>
-          <h5>Awareness</h5>
-          <p>The gap is mostly reach — once people know Aurora, it competes.</p>
+        <div className="act">
+          <div className="act-top"><span className="check" /><span className="act-verb">02 · Buy</span></div>
+          <h5>Invest in awareness</h5>
+          <p>The gap is mostly <b>reach</b> — once people know Aurora, it competes. Get it in front of more people.</p>
         </div>
-        <div className="tk">
-          <div className="n">03 — Fix</div>
+        <div className="act">
+          <div className="act-top"><span className="check" /><span className="act-verb">03 · Fix</span></div>
           <h5>Turn interest into sales</h5>
-          <p>
-            Help the people who already like Aurora actually buy it — especially women. Worth about 4
-            more buyers in every 100.
-          </p>
+          <p>Close the <b>trial</b> gap, especially with women — help those who like Aurora actually buy it.</p>
+          <span className="impact">≈ +4 buyers per 100</span>
         </div>
       </div>
 

@@ -32,15 +32,16 @@ export type RaceLane = {
 export type StandingRow = { brand: string; pct: number; rank: number; barPct: number; isAurora: boolean; isLeader: boolean }
 export type StandingCol = { key: string; label: string; desc: string; color: string; rows: StandingRow[] }
 
-/** Map a stage's four values onto an 8%–86% track, zoomed to [min−pad, max+pad]. */
+// Zoom each lane to its own range (so small moves are visible), but pin the leader's *now*
+// position to a common finish line so the Borealis ★ lands at the same x in every lane.
+// (Borealis-Q1 is the max value at every stage, so mapping it to the top of the scale aligns it.)
+const FINISH = 84 // leader-now lands here (%) in every lane
 function positions(aQ4: number, aQ1: number, bQ4: number, bQ1: number) {
-  const vals = [aQ4, aQ1, bQ4, bQ1]
-  const min = Math.min(...vals)
-  const max = Math.max(...vals)
-  const pad = Math.max(1.5, (max - min) * 0.13)
+  const min = Math.min(aQ4, aQ1, bQ4, bQ1)
+  const pad = Math.max(1.5, (Math.max(aQ4, aQ1, bQ4, bQ1) - min) * 0.13)
   const lo = min - pad
-  const span = max + pad - lo
-  const p = (v: number) => r1(8 + ((v - lo) / span) * 78)
+  const span = bQ1 - lo
+  const p = (v: number) => r1(10 + ((v - lo) / span) * (FINISH - 10))
   const aw = p(aQ4), an = p(aQ1), bw = p(bQ4), bn = p(bQ1)
   return { aw, an, bw, bn, bwR: r1(100 - bw), bnR: r1(100 - bn), mid: r1((an + bn) / 2) }
 }
