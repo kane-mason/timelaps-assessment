@@ -1,5 +1,5 @@
 import { ConnectedRace } from '@/components/funnel/ConnectedRace'
-import { StageBadge } from '@/components/funnel/StageBadge'
+import { StageIcon } from '@/components/funnel/StageIcon'
 import { getPageData } from '@/lib/funnel/page-data'
 
 export default function Page() {
@@ -44,8 +44,11 @@ export default function Page() {
         {standings.map((col) => (
           <div className="scol" key={col.key}>
             <div className="sc-head">
-              <StageBadge stage={col.key} label={col.label} />
-              <div className="sc-desc">{col.desc}</div>
+              <StageIcon stage={col.key} />
+              <div>
+                <div className="sc-name">{col.label}</div>
+                <div className="sc-desc">{col.desc}</div>
+              </div>
             </div>
             {col.rows.map((row) => (
               <div
