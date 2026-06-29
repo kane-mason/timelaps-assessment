@@ -19,9 +19,9 @@ const GLYPHS: Record<string, ReactNode> = {
   used: <path d="M8 13.2S2.6 9.7 2.6 6.1A2.7 2.7 0 0 1 8 4.7a2.7 2.7 0 0 1 5.4 1.4C13.4 9.7 8 13.2 8 13.2z" />,
 }
 
-export function StageIcon({ stage }: { stage: string }) {
+export function StageIcon({ stage, size }: { stage: string; size?: 'sm' }) {
   return (
-    <span className={`stage-ic ${stage}`} aria-hidden>
+    <span className={`stage-ic${size === 'sm' ? ' sm' : ''} ${stage}`} aria-hidden>
       <svg viewBox="0 0 16 16">{GLYPHS[stage]}</svg>
     </span>
   )

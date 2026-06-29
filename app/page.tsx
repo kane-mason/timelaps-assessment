@@ -93,7 +93,7 @@ export default function Page() {
             Borealis:
           </div>
           <div className="h2h">
-            <div className="lbl"><span>Would consider</span></div>
+            <div className="lbl"><span className="lbl-ic"><StageIcon stage="consider" size="sm" />Would consider</span></div>
             <div className="vs">
               <div className="b me">
                 <i style={{ width: `${diagnosis.h2hConsiderAurora}%` }} />
@@ -120,7 +120,7 @@ export default function Page() {
             Of the people who <i>would</i> consider each brand, how many go on to buy it:
           </div>
           <div className="h2h">
-            <div className="lbl"><span>Go on to buy</span></div>
+            <div className="lbl"><span className="lbl-ic"><StageIcon stage="used" size="sm" />Go on to buy</span></div>
             <div className="vs">
               <div className="b me">
                 <i style={{ width: `${diagnosis.convAurora}%` }} />
@@ -159,12 +159,12 @@ export default function Page() {
           <p>Clear of Cascade and Drift, with demand as loyal as the leader&apos;s — defend it.</p>
         </div>
         <div className="act">
-          <div className="act-top"><span className="check" /><span className="act-verb">02 · Buy</span></div>
+          <div className="act-top"><span className="check" /><span className="act-verb">02 · Buy</span><StageIcon stage="aware" size="sm" /></div>
           <h5>Invest in awareness</h5>
           <p>The gap is mostly <b>reach</b> — once people know Aurora, it competes. Get it in front of more people.</p>
         </div>
         <div className="act">
-          <div className="act-top"><span className="check" /><span className="act-verb">03 · Fix</span></div>
+          <div className="act-top"><span className="check" /><span className="act-verb">03 · Fix</span><StageIcon stage="used" size="sm" /></div>
           <h5>Turn interest into sales</h5>
           <p>Close the <b>trial</b> gap, especially with women — help those who like Aurora actually buy it.</p>
           <span className="impact">≈ +4 buyers per 100</span>

@@ -20,6 +20,8 @@ a{color:inherit;text-decoration:none}
    the leader, movement). */
 .stage-ic{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;border:1px solid rgba(120,116,108,.22);background:rgba(120,116,108,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .stage-ic svg{width:13px;height:13px;fill:none;stroke:#6B665E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stage-ic.sm{width:18px;height:18px;border-radius:6px} .stage-ic.sm svg{width:11px;height:11px}
+.lbl-ic{display:inline-flex;align-items:center;gap:7px}
 
 /* ===== ADMIN SHELL ===== */
 .app{display:flex;min-height:100vh}
@@ -161,6 +163,7 @@ a{color:inherit;text-decoration:none}
 .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .act{background:var(--surface-raised);border:1px solid var(--border);border-radius:14px;padding:18px 18px 16px;display:flex;flex-direction:column}
 .act-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.act-top .stage-ic{margin-left:auto}
 .check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--focus-edge);background:var(--focus-tint);flex:0 0 20px}
 .act-verb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--focus-deep)}
 .act h5{font-size:14.5px;font-weight:800;letter-spacing:-.01em}
