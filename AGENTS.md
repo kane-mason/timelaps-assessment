@@ -14,8 +14,10 @@ The Timelaps founding-engineer technical exercise — full brief in
   NL question → analysis grounded in the real numbers → plain-language answer + viz. Notes
   in [docs/part2/](docs/part2/).
 
-Both parts are planned to ship on **one Next.js site**; app code will live at the repo
-root (not yet scaffolded).
+Both parts ship on **one Next.js site** (App Router) scaffolded at the repo root: `app/`
+(routes + `globals.css`), `components/funnel/`, `lib/funnel/page-data.ts` (view model computed
+from `lib/metrics.mjs`). `npm run dev` to run, `npm run build` for a static prerender, `npm test`
+for the metrics tests. Part 1 (`app/page.tsx`) is built; Part 2 not yet.
 
 ## Repo layout
 
@@ -70,9 +72,11 @@ node --test 'lib/**/*.test.mjs'    # or the /verify-data skill in Claude Code
 
 ## Stack
 
-**Decided:** one **Next.js app at the repo root, deployed to Vercel**, hosting both parts
-(see [docs/decisions.md](docs/decisions.md)). Not yet scaffolded. The **chart library is not
-chosen yet — don't assume one.** Conventions here will grow once code exists.
+**Decided & scaffolded:** one **Next.js App-Router app at the repo root, for Vercel**, hosting
+both parts (see [docs/decisions.md](docs/decisions.md)). **No chart library** — the visuals are
+hand-built HTML/CSS (+ Framer Motion for the one animated hero); don't add one. Numbers are never
+hard-coded in components: they come from `lib/metrics.mjs` via `lib/funnel/page-data.ts`. Brand
+fonts load through `next/font/google` (Rethink Sans + Fragment Mono).
 
 Part 1 (the funnel view) is the priority. Part 2 appears as an in-app "AI Analyst" page
 presenting the design (the graded deliverable); an actual working tool is an optional,
