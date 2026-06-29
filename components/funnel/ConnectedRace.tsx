@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { useInView } from 'framer-motion'
 import type { RaceLane } from '@/lib/funnel/page-data'
+import { StageBadge } from '@/components/funnel/StageBadge'
 
 // Section 01 — the connected race. Two businesses joined by the gap line; on scroll-into-view
 // both dots roll from last quarter to now and the line stretches/contracts, colouring in.
@@ -46,8 +47,7 @@ export function ConnectedRace({ lanes }: { lanes: RaceLane[] }) {
           {lanes.map((l) => (
             <div key={l.key} className={`lane ${l.narrowed ? 'narrow' : 'widen'}`} style={laneVars(l.pos)}>
               <div className="lane-stage">
-                <span className="sdot" style={{ background: l.color }} />
-                {l.label}
+                <StageBadge stage={l.key} label={l.label} />
               </div>
               <div className="track">
                 <div className="link" />
