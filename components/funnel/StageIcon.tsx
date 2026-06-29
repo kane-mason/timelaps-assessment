@@ -1,6 +1,6 @@
 // A little colour-coded icon-badge for a funnel stage (aware / consider / used), reused across
 // the page. The glyph differentiates the stage on top of colour — eye (seen it), magnifier
-// (weighing it up), check (bought it) — so the colour is never the only cue.
+// (weighing it up), shopping bag (bought it) — so the colour is never the only cue.
 import type { ReactNode } from 'react'
 
 const GLYPHS: Record<string, ReactNode> = {
@@ -16,7 +16,12 @@ const GLYPHS: Record<string, ReactNode> = {
       <path d="M10 10l3.4 3.4" />
     </>
   ),
-  used: <path d="M3 8.4l3.3 3.3L13 4.6" />,
+  used: (
+    <>
+      <path d="M4.3 5.5h7.4l-.6 8.1H4.9z" />
+      <path d="M6 5.5V4.3a2 2 0 0 1 4 0v1.2" />
+    </>
+  ),
 }
 
 export function StageIcon({ stage }: { stage: string }) {
