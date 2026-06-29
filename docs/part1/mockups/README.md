@@ -11,8 +11,11 @@ The story is **"reach + trial, not preference"**, told in four sections: **01 th
 a green ★) → **03 the diagnosis** (plain-language "good news / problem" — reach not rejection, then
 the trial leak) → **04 the takeaway**.
 
-- **page-v7.html** — the full page in that order, restrained editorial chapter headers, plain
-  language. The current full-page lead.
+- **page-v9.html** — ⭐ the full-page lead. Same four sections as v7, but section 01 is now the
+  **connected-race**: Aurora and Borealis joined by the gap line, both dots roll from last quarter
+  to now, and the line colours in red (widened) / green (narrowed) as it settles. Animates on
+  scroll-into-view, with a Replay button.
+- **page-v7.html** — the static predecessor (section 01 was a gap timeline). Reference.
 ### Section 01 — candidate treatments (the movement, animated)
 - **section1-chase-anim.html** — ⭐ Borealis pinned at "1st place" (green ★, front); Aurora the
   amber runner; a dashed ring marks last quarter; on view the runner slides from there to now

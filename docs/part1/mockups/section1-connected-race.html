@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Section 1 — connected race (gap line between the two)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --surface-base:#FCFAF6; --surface-raised:#FFFFFF;
+    --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
+    --focus:#FBBF24; --focus-deep:#A66A00; --focus-edge:#F4C657;
+    --lead:#16A34A; --lead-tint:#E9F7EE; --lead-deep:#0E7A38;
+    --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+    --pos:#16A34A; --neg:#C2526A; --border:#EBE8E1;
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+    --dur:2400ms; --ease:cubic-bezier(.33,0,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--surface-base);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.4;padding:56px 24px}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  .head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  .ch-kick{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+  .ch-kick b{color:var(--ink);font-weight:600}
+  .ch-title{font-size:19px;font-weight:700;letter-spacing:-.018em;line-height:1.2;margin-top:6px;color:var(--ink)}
+  .ch-read{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-top:6px;max-width:700px}
+  .ch-read b{color:var(--ink);font-weight:600}
+  .ch-read .gn{color:var(--lead-deep);font-weight:700} .ch-read .rd{color:var(--neg);font-weight:700}
+  .replay{flex:0 0 auto;margin-top:2px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--focus-deep);background:var(--surface-raised);border:1px solid var(--focus-edge);border-radius:999px;padding:8px 14px;cursor:pointer}
+  .replay:hover{background:#FFF8E8}
+
+  .race{margin-top:34px}
+  .lane{display:grid;grid-template-columns:150px 1fr 162px;align-items:center;gap:24px;padding:36px 2px}
+  .lane + .lane{border-top:1px solid var(--border)}
+  .lane-stage{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:700}
+  .lane-stage .sdot{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+
+  .track{position:relative;height:34px}
+  /* the connector between the two businesses = the gap. Colour: narrowed (green) / widened (red) */
+  .link{position:absolute;top:50%;height:5px;transform:translateY(-50%);border-radius:999px;left:var(--an);right:var(--bnR);z-index:1;background:#D2CEC5}
+  .lane.widen{--linkcolor:var(--neg)} .lane.narrow{--linkcolor:var(--pos)}
+  /* the two businesses */
+  .dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:999px;border:3px solid var(--surface-raised);z-index:2;display:flex;align-items:center;justify-content:center}
+  .d-aur{width:20px;height:20px;background:var(--focus);left:var(--an);--from:var(--aw);--to:var(--an);box-shadow:0 1px 4px rgba(0,0,0,.14)}
+  .d-bor{width:22px;height:22px;background:var(--lead);left:var(--bn);--from:var(--bw);--to:var(--bn);color:#fff;font-size:11px;box-shadow:0 1px 4px rgba(22,120,56,.25)}
+  .tag{position:absolute;top:calc(50% - 25px);transform:translateX(-50%);font-size:9px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+  .tag.aur{left:var(--an);color:var(--focus-deep)} .tag.bor{left:var(--bn);color:var(--lead-deep)}
+  .val{position:absolute;top:calc(50% + 16px);transform:translateX(-50%);font-size:10.5px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .val.aur{left:var(--an);color:var(--focus-deep)} .val.bor{left:var(--bn);color:var(--lead-deep)}
+  .gaplab{position:absolute;left:var(--mid);top:calc(50% - 21px);transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums;opacity:0}
+  .lane.widen .gaplab{color:var(--neg)} .lane.narrow .gaplab{color:var(--lead-deep)}
+
+  .verdict{text-align:right}
+  .verdict .v{font-size:14px;font-weight:800;opacity:0}
+  .lane.widen .verdict .v{color:var(--neg)} .lane.narrow .verdict .v{color:var(--pos)}
+  .verdict .s{font-size:11px;font-weight:500;color:var(--text-3);margin-top:3px;opacity:0}
+
+  /* animation: both businesses move from last quarter to now; the connecting line stretches
+     (widens, red) or contracts (narrows, green) with them. No individual start/end markers. */
+  .race.play .d-aur,.race.play .d-bor{animation:roll var(--dur) var(--ease) both}
+  /* line stays neutral while the dots move, then colours in over the final stretch */
+  .race.play .link{animation:connect var(--dur) var(--ease) both, colorize 700ms ease calc(var(--dur) - 600ms) both}
+  .race.play .tag,.race.play .val{animation:fade 500ms ease 200ms both}
+  .race.play .gaplab,.race.play .verdict .v{animation:fade 600ms ease calc(var(--dur) - 350ms) both}
+  .race.play .verdict .s{animation:fade 600ms ease calc(var(--dur) - 120ms) both}
+  @keyframes roll{from{left:var(--from)}to{left:var(--to)}}
+  @keyframes connect{from{left:var(--aw);right:var(--bwR)}to{left:var(--an);right:var(--bnR)}}
+  @keyframes colorize{from{background:#D2CEC5}to{background:var(--linkcolor)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    .race.play .d-aur,.race.play .d-bor,.race.play .link,.race.play .gaplab,.race.play .verdict .v,.race.play .verdict .s{animation:none}
+    .link{background:var(--linkcolor)} .gaplab,.verdict .v,.verdict .s{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head-row">
+    <div>
+      <div class="ch-kick"><b>01</b> &nbsp;·&nbsp; The gap to the leader</div>
+      <div class="ch-title">The line between Aurora and Borealis is stretching on two stages, shrinking on one</div>
+      <div class="ch-read">Both brands moved since last quarter. The line between them is the gap — watch it <span class="rd">stretch (widening)</span> on awareness and usage as Borealis pulls ahead, and <span class="gn">contract (narrowing)</span> on consideration as Aurora closes in. Each lane is zoomed to its own range.</div>
+    </div>
+    <button class="replay" id="replay">▸ Replay</button>
+  </div>
+
+  <div class="race" id="race">
+
+    <!-- AWARENESS: gap 5→14 widen. Aurora 17.9→21.0 ; Borealis 38.3→76.2 (R 61.7→23.8) -->
+    <div class="lane widen" style="--aw:17.9%;--an:21.0%;--bw:38.3%;--bn:76.2%;--bwR:61.7%;--bnR:23.8%;--mid:48.6%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-aware)"></span>Awareness</div>
+      <div class="track">
+        <div class="link"></div>
+        <div class="dot d-aur"></div><div class="dot d-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="val aur">62%</span><span class="val bor">76%</span>
+        <span class="gaplab">14 behind ▸</span>
+      </div>
+      <div class="verdict"><div class="v">▸ Gap widened</div><div class="s">Borealis pulled ahead</div></div>
+    </div>
+
+    <!-- CONSIDERATION: gap 10→8 narrow. Aurora 17.2→33.7 ; Borealis 68.6→76.8 (R 31.4→23.2) -->
+    <div class="lane narrow" style="--aw:17.2%;--an:33.7%;--bw:68.6%;--bn:76.8%;--bwR:31.4%;--bnR:23.2%;--mid:55.3%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-consider)"></span>Consideration</div>
+      <div class="track">
+        <div class="link"></div>
+        <div class="dot d-aur"></div><div class="dot d-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="val aur">32%</span><span class="val bor">41%</span>
+        <span class="gaplab">◂ 8 behind</span>
+      </div>
+      <div class="verdict"><div class="v">◂ Gap narrowed</div><div class="s">Aurora closed in — bright spot</div></div>
+    </div>
+
+    <!-- USED: gap 4→9 widen. Aurora 17.3→22.2 ; Borealis 42.1→76.7 (R 57.9→23.3) -->
+    <div class="lane widen" style="--aw:17.3%;--an:22.2%;--bw:42.1%;--bn:76.7%;--bwR:57.9%;--bnR:23.3%;--mid:49.5%">
+      <div class="lane-stage"><span class="sdot" style="background:var(--stage-used)"></span>Used</div>
+      <div class="track">
+        <div class="link"></div>
+        <div class="dot d-aur"></div><div class="dot d-bor">★</div>
+        <span class="tag aur">AURORA</span><span class="tag bor">BOREALIS</span>
+        <span class="val aur">16%</span><span class="val bor">24%</span>
+        <span class="gaplab">9 behind ▸</span>
+      </div>
+      <div class="verdict"><div class="v">▸ Gap widened</div><div class="s">Borealis pulled away</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const race = document.getElementById('race');
+  const play = () => { race.classList.remove('play'); void race.offsetWidth; race.classList.add('play'); };
+  new IntersectionObserver((es, o) => { es.forEach(e => { if (e.isIntersecting) play(); }); }, { threshold: .35 }).observe(race);
+  document.getElementById('replay').addEventListener('click', play);
+</script>
+</body>
+</html>

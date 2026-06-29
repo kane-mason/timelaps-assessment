@@ -79,9 +79,16 @@ diagnostic and exposes Aurora's real weakness (consider→used). See the decisio
 2. **Narrative headline** (the insight, generated from data):
    > *Aurora is the clear #2 — closing on Borealis in consideration, but losing ground in awareness
    > and usage.* (Subhead deepens it: *the gap is reach + trial, not preference.*)
-3. **The hook — diverging-gap panel.** One focal visual: gap-to-leader per stage with Q4→Q1
-   movement, so "gaining in the middle, losing at the edges" reads in one glance (rose = widening,
-   green = closing). *(gapToLeader)*
+3. **The hook — the gap-to-leader "connected race"** (see `mockups/section1-connected-race.html`,
+   integrated in `mockups/page-v9.html`). Per stage, Aurora and Borealis are two dots joined by a
+   **line = the gap**. On scroll-into-view both dots roll from last quarter → now (each lane
+   normalized/truncated to its own range so the moves are visible), and the connecting line
+   **stretches (widening) or contracts (narrowing)**, starting neutral grey and **colouring in**
+   red/green as it settles. The relationship (the gap) is the subject, not each brand's start/end.
+   Reduced-motion snaps to the end state. *(gapToLeader)*
+   **Build:** Framer Motion — `whileInView` to trigger, animate dot `x` (last→now) and the line's
+   width, with a `prefers-reduced-motion` guard; positions come from `lib/metrics.mjs` (per-lane
+   min/max normalization). A Replay control re-runs it.
 4. **The standings — competitive leaderboard** (Option I, stages as columns): brands ranked within
    each stage, Aurora amber container highlight, leader green, others dimmed; relative bar scaled to
    the stage leader. *(funnelByBrandWave)*
