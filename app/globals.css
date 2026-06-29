@@ -3,7 +3,7 @@
   --ink:#0A0A0A; --text-2:#7C786F; --text-3:#B4B4B4;
   --focus:#FBBF24; --focus-deep:#A66A00; --focus-tint:#FEF6E2; --focus-edge:#F4C657;
   --lead:#16A34A; --lead-tint:#E9F7EE; --lead-deep:#0E7A38; --blue:#2E7BE5;
-  --stage-aware:#F59E0B; --stage-consider:#38BDF8; --stage-used:#34D17F;
+  --stage-aware:#7E6AD0; --stage-consider:#38BDF8; --stage-used:#34D17F; /* aware=violet, distinct from Aurora's amber */
   --pos:#16A34A; --pos-tint:#E9F7EE; --neg:#C2526A; --neg-tint:#F6EAEE;
   --dim:#A8A49B; --dim-bar:#DDDAD2; --border:#EBE8E1;
   --sans: var(--font-rethink), Inter, ui-sans-serif, system-ui, sans-serif;
@@ -18,7 +18,7 @@ a{color:inherit;text-decoration:none}
 /* STAGE ICON — a little frosted-glass icon-badge per stage (shape + washed colour, see-through) */
 .stage-ic{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;border:1px solid;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
 .stage-ic svg{width:13px;height:13px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.stage-ic.aware{background:rgba(245,158,11,.16);border-color:rgba(245,158,11,.4)} .stage-ic.aware svg{stroke:#B5710A}
+.stage-ic.aware{background:rgba(126,106,208,.18);border-color:rgba(126,106,208,.45)} .stage-ic.aware svg{stroke:#50409B}
 .stage-ic.consider{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.45)} .stage-ic.consider svg{stroke:#1B6E9E}
 .stage-ic.used{background:rgba(52,209,127,.20);border-color:rgba(52,209,127,.5)} .stage-ic.used svg{stroke:#0E7A38}
 
