@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Analyst — Architecture mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --base:#FCFAF6; --raised:#FFFFFF; --cream:#FFFDFA; --muted:#F2F2F2; --inverse:#0A0A0A;
+    --ink:#0A0A0A; --ink2:#737373; --ink3:#A3A3A3;
+    --link:#006AFF; --link-tint:#CCE1FF;
+    --focus:#FBBF24; --focus-tint:#FEF3C7; --focus-soft:#FFF6DD;
+    --aware:#F59E0B; --consider:#38BDF8; --used:#4ADE80;
+    --pos:#16A34A; --pos-tint:#BBF7D0; --neg:#DB2777; --neg-tint:#FFE6F1;
+    --border:#E6E6E6; --border-sub:rgba(34,34,34,.10);
+    --sans:'Rethink Sans',Inter,ui-sans-serif,system-ui,sans-serif;
+    --mono:'Fragment Mono',ui-monospace,'SF Mono',monospace;
+    --card:0 1px 2px rgba(10,10,10,.05),0 1px 1px rgba(10,10,10,.04);
+    --r-sm:8px; --r-md:12px; --r-lg:16px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--base);color:var(--ink);font-family:var(--sans);
+    font-feature-settings:"tnum";-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1140px;margin:0 auto;padding:48px 32px 80px}
+  h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
+  .mono{font-family:var(--mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* header */
+  header{margin-bottom:40px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+  h1{font-size:2.25rem;line-height:1.05;margin:10px 0 14px}
+  .sub{font-size:1.05rem;color:var(--ink2);max-width:760px}
+  .sub b{color:var(--ink);font-weight:600}
+  .scopenote{display:flex;align-items:baseline;gap:10px;margin-top:16px;max-width:770px;
+    background:var(--focus-soft);border:1px solid #f3d999;border-radius:10px;
+    padding:9px 14px;font-size:.8rem;color:#7a5309;line-height:1.45}
+  .scopenote .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+    color:#92610a;background:#fff;border:1px solid #f3d999;border-radius:999px;padding:3px 9px;flex:0 0 auto}
+  .scopenote b{color:#5c3f07;font-weight:600}
+
+  section{margin-top:52px}
+  .shead{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+  .shead .n{font-family:var(--mono);font-size:.8rem;color:var(--ink3)}
+  h2{font-size:1.35rem}
+  .lead{color:var(--ink2);max-width:780px;margin:6px 0 0;font-size:.95rem}
+
+  /* pipeline band */
+  .pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:0}
+  .node{flex:1 1 0;min-width:118px;background:var(--raised);border:1px solid var(--border);
+    border-radius:var(--r-md);padding:14px 13px;box-shadow:var(--card);position:relative}
+  .arrow{align-self:center;color:var(--ink3);font-size:1.1rem;padding:0 6px;flex:0 0 auto}
+  .node .num{font-family:var(--mono);font-size:.7rem;color:var(--ink3)}
+  .node h4{font-size:.95rem;margin:3px 0 5px}
+  .node .ol{font-size:.8rem;color:var(--ink2);line-height:1.35;min-height:34px}
+  .chip{display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;
+    text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-top:9px;border:1px solid transparent}
+  .chip.llm{background:var(--link-tint);color:#0a3a8a;border-color:#b9d4ff}
+  .chip.compute{background:var(--muted);color:#555;border-color:#e3e3e3}
+  .chip.guard{background:var(--focus-tint);color:#92610a;border-color:#f3d999}
+  .chip.io{background:#11110f;color:var(--base)}
+  .node.is-guard{border-color:var(--focus);box-shadow:0 0 0 3px var(--focus-soft),var(--card)}
+  .loopnote{margin-top:14px;font-size:.85rem;color:var(--ink2);display:flex;gap:8px;align-items:center}
+  .loopnote .lk{color:#92610a;font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-size:.78rem;color:var(--ink2)}
+  .legend .chip{margin:0}
+
+  /* stage details */
+  .stagelist{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stagelist .row{background:var(--cream);border:1px solid var(--border-sub);border-radius:var(--r-sm);padding:11px 13px}
+  .stagelist .row b{font-size:.86rem}
+  .stagelist .row p{margin:4px 0 0;font-size:.8rem;color:var(--ink2);line-height:1.4}
+  .stagelist .row .mono{color:var(--ink);font-size:.78rem}
+
+  /* two-up callouts */
+  .twoup{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .callout{background:var(--raised);border:1px solid var(--border);border-radius:var(--r-lg);
+    padding:20px 22px;box-shadow:var(--card)}
+  .callout.lock{border-left:4px solid var(--ink)}
+  .callout.thin{border-left:4px solid var(--focus)}
+  .callout h3{font-size:1.05rem;display:flex;align-items:center;gap:9px}
+  .callout .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink2);border:1px solid var(--border);border-radius:999px;padding:2px 8px}
+  .callout p{font-size:.875rem;color:var(--ink2);margin:12px 0 0;line-height:1.5}
+  .callout p b,.callout p .mono{color:var(--ink)}
+  .locks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .locks li{font-size:.85rem;color:var(--ink2);padding-left:24px;position:relative}
+  .locks li::before{content:"🔒";position:absolute;left:0;top:0;font-size:.8rem}
+  .locks li b{color:var(--ink)}
+  .ladder{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .ladder .step{font-family:var(--mono);font-size:.72rem;padding:4px 10px;border-radius:999px;border:1px solid var(--border)}
+  .ladder .gate{background:#f6f6f6}
+  .ladder .flag{background:var(--focus-tint);color:#92610a;border-color:#f3d999}
+  .ladder .redir{background:var(--link-tint);color:#0a3a8a;border-color:#b9d4ff}
+  .ladder .ar{color:var(--ink3)}
+
+  /* viz rules table */
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  thead th{text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);
+    font-weight:600;padding:0 14px 8px;border-bottom:1px solid var(--border)}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--border-sub);vertical-align:top;color:var(--ink2)}
+  tbody td:first-child{color:var(--ink);font-weight:500;width:30%}
+  tbody td .v{color:var(--ink);font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  .rejectrow td:first-child{color:var(--neg)}
+
+  /* worked examples */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .card{background:var(--raised);border:1px solid var(--border);border-radius:var(--r-lg);
+    box-shadow:var(--card);overflow:hidden;display:flex;flex-direction:column}
+  .card .q{background:var(--inverse);color:var(--base);padding:16px 20px}
+  .card .q .lab{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#bdbdbd}
+  .card .q p{margin:5px 0 0;font-size:1.02rem;font-weight:600}
+  .card .body{padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+  .blk-lab{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+
+  /* plan chips */
+  .plan{display:flex;flex-direction:column;gap:5px}
+  .plan .p{font-size:.78rem;color:var(--ink2);padding:6px 9px;background:var(--cream);
+    border:1px solid var(--border-sub);border-radius:var(--r-sm);line-height:1.35}
+  .plan .p .mono{color:var(--ink);font-weight:500}
+
+  /* ledger */
+  .ledger{display:flex;flex-direction:column;gap:0;border:1px solid var(--border-sub);border-radius:var(--r-sm);overflow:hidden}
+  .led{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:8px 11px;border-bottom:1px solid var(--border-sub)}
+  .led:last-child{border-bottom:none}
+  .led:nth-child(odd){background:var(--cream)}
+  .led .l{font-size:.78rem;color:var(--ink2);line-height:1.3}
+  .led .val{font-family:var(--mono);font-size:.82rem;color:var(--ink);font-weight:500;white-space:nowrap}
+  .led .meta{display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .nbadge{font-family:var(--mono);font-size:.66rem;color:var(--ink2);background:var(--muted);
+    border-radius:999px;padding:2px 7px}
+  .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;display:inline-block}
+  .dot.solid{background:var(--pos)}
+  .dot.thin{background:repeating-linear-gradient(45deg,var(--aware),var(--aware) 2px,#fff3 2px,#fff3 4px);
+    box-shadow:inset 0 0 0 1.5px var(--aware)}
+  .led.thinrow .val{color:var(--ink2)}
+
+  /* mini charts */
+  .viz{border:1px solid var(--border-sub);border-radius:var(--r-md);padding:14px;background:var(--cream)}
+  .viz .vlab{font-size:.78rem;color:var(--ink2);margin-bottom:12px}
+  .panels{display:flex;gap:14px}
+  .panel{flex:1;background:var(--raised);border:1px solid var(--border-sub);border-radius:var(--r-sm);padding:10px 10px 8px}
+  .panel.focus{border-color:var(--focus);background:var(--focus-soft)}
+  .panel .pt{font-size:.7rem;color:var(--ink2);margin-bottom:8px;font-weight:500}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:118px;position:relative;padding-top:14px}
+  .bargrp{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar{width:26px;border-radius:4px 4px 0 0;position:relative}
+  .bar .top{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.66rem;color:var(--ink)}
+  .bcap{font-size:.62rem;color:var(--ink3);margin-top:5px;text-align:center;line-height:1.2}
+  .bar.consider{background:var(--consider)} .bar.consider.q0{background:#bfe7fb}
+  .bar.used{background:var(--used)} .bar.used.q0{background:#cdf3da}
+  .bar.amber{background:var(--focus)} .bar.neutral{background:#cfcfcf}
+  .bench{position:absolute;left:6px;right:6px;border-top:2px dashed var(--neg);}
+  .bench span{position:absolute;right:0;top:-15px;font-family:var(--mono);font-size:.6rem;color:var(--neg)}
+  .grey{opacity:.38}
+  .gaploss{font-family:var(--mono);font-size:.66rem;color:var(--neg);font-weight:600}
+
+  /* answer + note */
+  .answer{font-size:.9rem;color:var(--ink);line-height:1.55;background:var(--focus-soft);
+    border-left:3px solid var(--focus);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:12px 14px}
+  .answer.clean{background:#f1f8f2;border-left-color:var(--pos)}
+  .answer b{font-weight:700}
+  .note{font-size:.78rem;color:var(--ink2);line-height:1.45;display:flex;gap:8px}
+  .note .k{flex:0 0 auto}
+  .trust{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.68rem;
+    padding:3px 9px;border-radius:999px;border:1px solid var(--border)}
+  .trust.quiet{color:var(--ink2)} .trust.loud{background:var(--focus-tint);color:#92610a;border-color:#f3d999}
+  .worth{border-top:1px dashed var(--border);padding-top:12px;display:flex;gap:9px;align-items:baseline}
+  .worth .wl{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);flex:0 0 auto}
+  .worth p{margin:0;font-size:.8rem;color:var(--ink2);line-height:1.5}
+  .worth p b{color:var(--ink);font-weight:600}
+
+  /* failure modes */
+  .fm{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .fm .f{background:var(--raised);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;box-shadow:var(--card)}
+  .fm .f .m{font-size:.82rem;color:var(--ink);font-weight:500;display:flex;gap:8px}
+  .fm .f .m .fn{font-family:var(--mono);color:var(--neg);font-size:.7rem;flex:0 0 auto;margin-top:1px}
+  .fm .f .mit{font-size:.78rem;color:var(--ink2);margin-top:6px;line-height:1.4;padding-left:24px}
+  .fm .f .mit::before{content:"→ ";color:var(--pos);font-weight:700}
+
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-size:.8rem;color:var(--ink2)}
+  footer .mono{color:var(--ink)}
+
+  /* typed-registry panel */
+  .regpanel{margin-top:24px;background:var(--raised);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--card)}
+  .regpanel h3{font-size:1.05rem;margin-bottom:8px}
+  .regpanel > p{font-size:.9rem;color:var(--ink2);line-height:1.5;margin:0 0 14px;max-width:840px}
+  .regpanel > p b{color:var(--ink)}
+  .regflow{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}
+  .regbox{background:var(--cream);border:1px solid var(--border-sub);border-radius:var(--r-md);padding:12px 14px}
+  .regbox.guard{background:var(--focus-soft);border-color:#f3d999}
+  .regcap{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:9px}
+  .regcode{font-family:var(--mono);font-size:.72rem;color:var(--ink);line-height:1.7;white-space:pre-wrap;margin:0}
+  .regcode .k{color:var(--ink2)}
+  .regto{align-self:center;color:var(--ink3);font-size:1.3rem}
+  .regnote{font-size:.78rem;color:var(--ink2);margin-top:10px;line-height:1.45}
+  .regnote b{color:var(--ink)}
+  @media(max-width:900px){
+    .twoup,.cards,.stagelist,.fm,.regflow{grid-template-columns:1fr}
+    .node{flex:1 1 100%} .arrow{transform:rotate(90deg);padding:2px 0}
+    .regto{transform:rotate(90deg)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Timelaps · Part 2 · Design mockup</div>
+    <h1>AI Analyst — Architecture</h1>
+    <p class="sub">Ask the data a question. Get a plain-language answer and <b>one chart</b>, every figure recomputed from the tracker via <span class="mono">lib/metrics.mjs</span> and married to its base size on screen. The honest <b>"this sample can't answer that"</b> is a designed behaviour, not a footnote.</p>
+    <div class="scopenote"><span class="tag">Scope</span><span>Deliberately scoped to the <b>provided dataset</b> (two waves, ~250 respondents), per the brief's <b>"same dataset"</b> — not built for arbitrary scale (no database, no RAG). By design.</span></div>
+  </header>
+
+  <!-- PIPELINE -->
+  <section>
+    <div class="shead"><span class="n">01</span><h2>The loop</h2></div>
+    <p class="lead">A bounded <b>Plan → Compute → Critique</b> loop — Critique loops back to Plan on a dead-end — on one principle: <b>encode invariants, not procedures</b>. The model <b>plans and re-plans</b> the tool calls and narrates the answer; <b>Compute and Critique</b> — the steps that produce and vet the numbers — are deterministic code. The hinge is that <b>Critique is plain code, not a second LLM</b> — a guard pass over a provenance-carrying compute log.</p>
+
+    <svg viewBox="0 0 960 264" role="img" aria-label="The analysis loop. Parse and the first Plan are one LLM call; Parse sits outside the loop. Plan, Compute, Critique form one agentic tool-use loop. The model finishes by calling submit_answer; Critique is the gate that validates it — a cleared answer goes to Render and Trace; a veto returns a guard-authored finding and the model re-plans, up to three passes." style="width:100%;height:auto;display:block;margin:20px 0 10px;font-family:'Rethink Sans',Inter,sans-serif">
+      <defs>
+        <marker id="ah" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,3 L0,6 Z" fill="#737373"/></marker>
+        <marker id="ahG" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,3 L0,6 Z" fill="#16A34A"/></marker>
+        <marker id="ahA" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,3 L0,6 Z" fill="#B45309"/></marker>
+      </defs>
+      <!-- the agentic loop groups Plan + Compute + Critique -->
+      <rect x="116" y="34" width="420" height="216" rx="12" fill="#FFF6DD" fill-opacity="0.5" stroke="#E4C05A" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="530" y="28" text-anchor="end" fill="#92610a" font-size="9" font-family="'Fragment Mono',monospace" letter-spacing="0.09em">AGENTIC TOOL-USE LOOP</text>
+      <!-- Parse + first Plan are one LLM call (dashed box, like the loop box) -->
+      <rect x="2" y="40" width="220" height="62" rx="10" fill="none" stroke="#6aa0e8" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="8" y="33" fill="#2a5db0" font-size="9" font-family="'Fragment Mono',monospace" letter-spacing="0.06em">ONE LLM CALL</text>
+      <!-- forward arrows (grey) -->
+      <g stroke="#737373" stroke-width="1.5" fill="none">
+        <path d="M100,73 L119,73" marker-end="url(#ah)"/>
+        <path d="M216,73 L235,73" marker-end="url(#ah)"/>
+        <path d="M344,73 L387,73" marker-end="url(#ah)"/>
+        <path d="M720,73 L739,73" marker-end="url(#ah)"/>
+        <path d="M836,73 L855,73" marker-end="url(#ah)"/>
+      </g>
+      <!-- clean exit (green) -->
+      <path d="M524,73 L739,73" stroke="#16A34A" stroke-width="1.75" fill="none" marker-end="url(#ahG)"/>
+      <text x="630" y="64" fill="#16A34A" font-size="11" font-weight="600" text-anchor="middle">submit_answer — gate cleared</text>
+      <!-- the loop (amber): dead-end down, then back-edge up to Compute -->
+      <g stroke="#B45309" stroke-width="2" fill="none">
+        <path d="M458,102 L458,210 L170,210 L170,101" marker-end="url(#ahA)"/>
+      </g>
+      <text x="468" y="140" fill="#B45309" font-size="11.5" font-weight="600">dead-end ↓</text>
+      <text x="468" y="156" fill="#8a6a3a" font-size="9" font-family="'Fragment Mono',monospace">thin · null · artefact ·</text>
+      <text x="468" y="167" fill="#8a6a3a" font-size="9" font-family="'Fragment Mono',monospace">projection · out_of_scope</text>
+      <text x="314" y="230" fill="#B45309" font-size="11.5" font-weight="600" text-anchor="middle">↻ back to Plan — the model goes again</text>
+      <text x="314" y="245" fill="#8a6a3a" font-size="9.5" font-family="'Fragment Mono',monospace" text-anchor="middle">gather next tool · or veto → guard-authored finding (max 3)</text>
+      <!-- boxes -->
+      <rect x="8" y="48" width="92" height="50" rx="8" fill="#EAF1FF" stroke="#B9D4FF"/>
+      <text x="54" y="78" text-anchor="middle" font-size="15" font-weight="600" fill="#0A0A0A">Parse</text>
+      <rect x="124" y="48" width="92" height="50" rx="8" fill="#EAF1FF" stroke="#B9D4FF"/>
+      <text x="170" y="78" text-anchor="middle" font-size="15" font-weight="600" fill="#0A0A0A">Plan</text>
+      <rect x="240" y="48" width="104" height="50" rx="8" fill="#FFFFFF" stroke="#E6E6E6"/>
+      <text x="292" y="78" text-anchor="middle" font-size="15" font-weight="600" fill="#0A0A0A">Compute</text>
+      <rect x="392" y="44" width="132" height="58" rx="8" fill="#FEF3C7" stroke="#FBBF24" stroke-width="2"/>
+      <text x="458" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#0A0A0A">Critique</text>
+      <text x="458" y="86" text-anchor="middle" font-size="9.5" font-style="italic" fill="#B45309">the gate</text>
+      <!-- no separate Answer box: the model's answer is a submit_answer call, validated by Critique (the gate); a cleared submission flows straight to Render. -->
+      <rect x="744" y="48" width="92" height="50" rx="8" fill="#11110F"/>
+      <text x="790" y="78" text-anchor="middle" font-size="15" font-weight="600" fill="#FCFAF6">Render</text>
+      <rect x="860" y="48" width="92" height="50" rx="8" fill="#11110F"/>
+      <text x="906" y="78" text-anchor="middle" font-size="15" font-weight="600" fill="#FCFAF6">Trace</text>
+      <!-- Replan is not a separate box: on a dead-end the loop returns to the Plan box (the amber back-edge above), where the LLM forms a new plan. -->
+    </svg>
+
+    <p class="lead" style="margin-top:6px"><b>Who decides to exit — the model, or the guard? Both.</b> Parse is a structured intake (no tools); then Plan → Compute → Critique is <b>one</b> agentic loop. The model drives it and decides when it's done by calling <b>submit_answer</b> (carrying its answer + vizSpec) instead of another tool. That submission goes through <b>Critique — the gate</b>, which validates it against the ledger: <b>cleared →</b> the answer flows to Render; <b>vetoed</b> (it leans on a barred cell, or a number not in the ledger) → the guard emits a <b>code-authored finding</b> — what's inadmissible, the boundary, the solid alternative — and the model goes again. So the LLM decides to <i>stop</i>; the guard decides whether the answer is <i>allowed out</i>. Bounded to <b>3 re-plans</b>; on exhaustion the guard forces a deterministic honest fallback (state the reliability boundary), so the loop always ends.</p>
+    <div class="legend">
+      <span><span class="chip llm">LLM</span> picks intent, drives tool-use &amp; narrates</span>
+      <span><span class="chip compute">compute</span> deterministic</span>
+      <span><span class="chip guard">guard</span> the honesty hinge</span>
+      <span><span class="chip io">i/o</span> what the leader sees</span>
+    </div>
+
+    <div class="stagelist">
+      <div class="row"><b>Parse</b> <span class="chip llm">LLM</span><p><b>Not a separate LLM call</b> — Parse is the <i>understanding</i> half of the model's first turn (one call also does the first Plan). It commits to an intent (<span class="mono">explain_movement, attribute_to_segment, locate_gap, size_opportunity, characterise_loyalty, describe_market, OUT_OF_SCOPE</span>) + entity slots that can only hold members of the live vocabularies, and echoes the reading back ("Reading this as: Aurora, consideration, Q4 → Q1").</p></div>
+      <div class="row"><b>Plan</b> <span class="chip llm">LLM</span><p>Inside the loop: the model calls a registered tool — or, when it's done gathering, calls <b>submit_answer</b> (carrying its plain-language answer + a VizSpec) to finish. <b>↻ The loop returns here</b> to call the next tool, or — on a veto — to form a <b>new plan</b> with the guard's finding. Honesty-critical steps (mix-adjust a movement, cross-check a thin cut) aren't left to the model — Critique appends them as invariants.</p></div>
+      <div class="row"><b>Compute</b> <span class="chip compute">compute</span><p>Each call dispatches to a <span class="mono">lib/metrics.mjs</span> export against <span class="mono">responses_raw.json</span>. Round-half-to-even lives inside the functions, so output byte-matches <span class="mono">analysed_outputs.json</span> (31.25→31.2). Results append to the ComputeLog with full provenance — in a <b>fixed typed shape</b> (below).</p></div>
+      <div class="row is-guard" style="border-color:var(--focus)"><b>Critique — the gate</b> <span class="chip guard">guard</span><p>Plain code, no LLM — reads the <b>typed result fields</b>. THIN guard (base &amp; count), NULL guard (rate===null → "not computable"), MIX guard, PROJECTION quarantine. It checks each result and <b>validates the <span class="mono">submit_answer</span></b> against the ledger: cleared → the answer ships; <b>veto</b> (leans on a barred cell, or a number not in the ledger) → a <b>code-authored finding</b> (inadmissible cells + boundary + solid alternative) → back to Plan.</p></div>
+      <div class="row"><b>Render</b> <span class="chip io">i/o</span><p><b>Deterministic, no model.</b> Takes the cleared submission (answer + VizSpec), binds the VizSpec's refs → ledger values → <b>draws the chart</b> (themed, thin cells greyed), then lays out the card: headline → chart → Trust strip (base_n + confidence glyph + denominator lens) → "Show the working" → Caveat rail. Loud only when there's something to flag.</p></div>
+      <div class="row"><b>Trace</b> <span class="chip io">i/o</span><p>Each figure expands to <span class="mono">fn(args) → {value, count, base_n, low_confidence}</span>. Footer: "recomputed from data; pinned in CI by /verify-data."</p></div>
+    </div>
+
+    <div class="regpanel">
+      <h3>Why a deterministic guard is even possible — the typed registry</h3>
+      <p>Critique can be plain code only because <b>Compute always returns a fixed, typed shape</b>. Every one of the 17 <span class="mono">lib/metrics.mjs</span> functions returns one of a small set of return types, each carrying its own base size and confidence flag — so the guard reads <b>known fields off known objects</b>, never free-form output. That consistency is the foundation the whole loop rests on.</p>
+      <div class="regflow">
+        <div class="regbox">
+          <div class="regcap">Compute returns — always one of these</div>
+<pre class="regcode"><span class="k">a stage %   </span>{ pct, count, base_n, low_confidence }
+<span class="k">a rate      </span>{ rate, numerator, denominator, low_confidence }
+<span class="k">a delta/gap </span>{ value, … }
+<span class="k">a what-if   </span>{ is_projection:true, assumption, … }</pre>
+        </div>
+        <div class="regto">→</div>
+        <div class="regbox guard">
+          <div class="regcap">Critique reads — code, no LLM</div>
+<pre class="regcode">base_n &lt; 50 ?
+count  &lt; 30 ?
+rate === null ?
+is_projection ?</pre>
+          <div class="regnote">Pure functions + round-half-to-even → <b>same input, same output</b> → repeatable, and pinned in CI (<span class="mono">/verify-data</span>). Consistent shapes upstream are what make a deterministic guard — and the whole honesty story — possible.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GROUNDING + THIN DATA -->
+  <section>
+    <div class="shead"><span class="n">02</span><h2>The two guarantees</h2></div>
+    <div class="twoup">
+      <div class="callout lock">
+        <h3>Grounded <span class="tag">no invented numbers</span></h3>
+        <p>Three structural locks, none of them prompt etiquette. The model decides <b>which</b> function and <b>how to say it</b>; the function decides the <b>value</b>; the loop decides whether that value may become a <b>claim</b>.</p>
+        <ul class="locks">
+          <li><b>Constrained tool surface.</b> The model's entire numeric vocabulary is the 17 functions in <span class="mono">lib/metrics.mjs</span>; <span class="mono">fn</span> is an enum, args type-checked. Handing the model the wheel on <i>what</i> to compute costs nothing here — who sequences the tools is irrelevant to whether a number can be invented.</li>
+          <li><b>Plan-then-compute.</b> Raw rows never enter the model's context, so it cannot do mental math. Rounding lives inside the functions.</li>
+          <li><b>Claim-ledger post-check.</b> Any prose number absent from a logged value fails the response. Derived figures (the +4.6pt gain) are first-class typed ledger entries from pure combinators — never narrator arithmetic.</li>
+        </ul>
+        <p style="margin-top:14px"><b>CI anchor:</b> <span class="mono">/verify-data</span> pins every function to <span class="mono">analysed_outputs.json</span> to the decimal; a golden-transcript test pins the full plan + ledger for Q1 and Q2. <span class="mono">analysed_outputs.json</span> is the CI fixture only — never the analyst's data source.</p>
+      </div>
+
+      <div class="callout thin">
+        <h3>Thin data <span class="tag">n &lt; 50 is a loop stage</span></h3>
+        <p>The brief's Q2 trap defeats a naive single check, so the guard runs <b>two</b>:</p>
+        <ul class="locks" style="margin-top:10px">
+          <li style="padding-left:0"><b>Check 1 — base:</b> <span class="mono">base_n &lt; 50</span>. Catches 50+ (n = 16 → 27).</li>
+          <li style="padding-left:0"><b>Check 2 — numerator:</b> <span class="mono">count &lt; 30</span>, even when the band base clears 50. Catches the 25-34 "swing" (count 23 → 26 on base 88/74) and the 50+ used cell (count 4).</li>
+        </ul>
+        <p>A unified <span class="mono">causal_admissible</span> flag (<span class="mono">base_n ≥ 50 AND count ≥ 30</span>) drives the UI confidence dot — so a cell the guard bars can never render a solid dot while the prose refuses it.</p>
+        <div class="ladder">
+          <span class="step gate">GATE</span><span class="ar">→</span>
+          <span class="step flag">FLAG (greyed, n + count)</span><span class="ar">→</span>
+          <span class="step redir">REDIRECT to a significant cut</span>
+        </div>
+        <p style="margin-top:12px"><b>The redirect is instrumented.</b> Gender bases are solid (n = 98 / 136) but the female base shrank 124 → 98 and the −14 vs −5 contrast is within sampling margin — so gender is the <b>directional</b> read, not a confirmed driver.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ SELECTION -->
+  <section>
+    <div class="shead"><span class="n">03</span><h2>Viz selection — the model picks the form, code owns the values</h2></div>
+    <p class="lead">Same principle as the loop: <b>open where the model reasons, code-owned where honesty lives.</b> The model emits a <span class="mono">VizSpec</span> — mark / encoding / annotation — carrying only <b>references</b> into the ledger, never numbers. A deterministic renderer binds the values, applies the Timelaps theme, and greys thin cells. So the analyst can chart a question in a shape we never pre-designed — and a stronger model picks better forms for free — while it stays impossible to draw a number it didn't compute. <b>A fixed dataset doesn't mean a fixed chart set.</b></p>
+
+    <div class="twoup" style="margin:18px 0">
+      <div class="callout" style="border-left:4px solid var(--link)">
+        <h3>Open — the model's job</h3>
+        <p>Which chart, encoding, annotation — into an open, brand-themed, <b>legibility-bounded</b> grammar (Vega-Lite-style, or a bespoke ref-only schema). Improves with every model generation, no code change.</p>
+      </div>
+      <div class="callout lock">
+        <h3>Code-owned — the invariants</h3>
+        <p>The <b>values</b> (bound from the ledger, ref-only) and the <b>confidence treatment</b> (thin cells greyed). The model can't supply a number or un-grey a thin base. <b>Openness of form ≠ openness of numbers.</b></p>
+      </div>
+    </div>
+
+    <p class="lead" style="margin-bottom:12px"><b>Legibility is time-to-comprehend, not time-to-answer.</b> An AI analyst is <i>expected to think</i> — the loop can take a beat and stream a "thinking" state. The bar (brief: <b>"act on in seconds," "one glance"</b>) applies to the <i>rendered</i> card: clear, not fast.</p>
+
+    <p class="lead" style="margin-bottom:14px"><b>Branded presets, not a cage</b> — the model's default pick for common shapes (kept pixel-clean and on-brand); it composes a new form within the grammar for questions we didn't anticipate.</p>
+    <table>
+      <thead><tr><th>Common shape / case</th><th>Preset the model reaches for</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Why did a stage move? <span class="mono" style="font-size:.72rem">(conversion)</span></td><td><span class="v">Comparison-rate panel</span></td><td>consider|aware vs used|consider with a Borealis benchmark tick — the leak is the visible story</td></tr>
+        <tr><td>How far from the leader, which way? <span class="mono" style="font-size:.72rem">(gap vector)</span></td><td><span class="v">Diverging delta bars</span></td><td>green = narrowing, rose = widening, grey at zero; reads at a glance</td></tr>
+        <tr><td>Which segment is driving it? <span class="mono" style="font-size:.72rem">(dimension cells)</span></td><td><span class="v">Small-multiples + n &amp; count</span></td><td>the thin bases <i>are</i> the visual argument — greyed cells can't be eyeballed as real</td></tr>
+        <tr><td>A what-if / projection <span class="mono" style="font-size:.72rem">(is_projection)</span></td><td><span class="v">Hatched bar + "Projection" badge</span></td><td>never a solid observed bar — the assumption string is prepended</td></tr>
+        <tr class="rejectrow"><td>Out of scope / unanswerable</td><td><span class="v">No chart — REJECT card</span></td><td>silently coercing a wrong question to the nearest intent is the most damaging failure</td></tr>
+        <tr><td>Something we didn't anticipate</td><td><span class="v">Model composes a form</span> in the open grammar</td><td>bounded only by the two floors above — ledger values + legible marks</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- WORKED EXAMPLES -->
+  <section>
+    <div class="shead"><span class="n">04</span><h2>The two graded questions, traced</h2></div>
+    <p class="lead">Both answer cards below use figures recomputed from <span class="mono">responses_raw.json</span> and verified by <span class="mono">/verify-data</span>. Confidence: <span class="dot solid" style="vertical-align:-1px"></span> solid &nbsp; <span class="dot thin" style="vertical-align:-1px"></span> thin (n&lt;50 or count&lt;30).</p>
+
+    <p class="lead" style="margin-top:2px"><b>How each card is built — submit_answer, validated, then rendered.</b> The model finishes by calling <b>submit_answer</b> — its answer text + chart choice together; <b>Critique validates</b> it against the ledger, then code turns the choice into the actual chart and lays out the card. The model never draws a pixel or supplies a number.</p>
+    <div class="twoup" style="margin:14px 0 24px">
+      <div class="callout" style="border-left:4px solid var(--link)">
+        <h3>① The model's <span class="mono" style="font-size:.9em">submit_answer</span> <span class="tag">LLM</span></h3>
+        <p>Its final call carries <b>both</b>: <b>answer</b> — the prose (+ opt-in "worth a look") — and <b>vizSpec</b> — which chart, as <b>references</b> into the ledger (no numbers). <i>The model writes the words &amp; picks the chart form.</i></p>
+      </div>
+      <div class="callout lock">
+        <h3>② Deterministic render <span class="tag">code</span></h3>
+        <p>Binds the vizSpec's refs → ledger values → <b>draws the chart</b> (themed, thin cells greyed), then assembles the card: answer + chart + trust strip + follow-up. <i>Code draws the chart &amp; assembles the card.</i></p>
+      </div>
+    </div>
+
+    <div class="cards">
+
+      <!-- Q1 -->
+      <div class="card">
+        <div class="q"><div class="lab">Question · clean chain</div><p>"Why did Aurora's consideration move this wave?"</p></div>
+        <div class="body">
+          <div>
+            <div class="blk-lab">Plan · explain_movement</div>
+            <div class="plan">
+              <div class="p"><span class="mono">waveDeltas</span> — locate the move, check if awareness moved too</div>
+              <div class="p"><span class="mono">conditionalConversion</span> — conversion or reach? + the used|consider leak vs Borealis</div>
+              <div class="p"><span class="mono">gapToLeader</span> — competitive distance &amp; its direction</div>
+              <div class="p"><span class="mono">mixAdjustedDelta</span> — mandatory credibility gate: real or sample-mix?</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="blk-lab">Computed · claim ledger</div>
+            <div class="ledger">
+              <div class="led"><div class="l">Consider %, Q1</div><div class="val">32.4%</div><div class="meta"><span class="nbadge">n=250</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Consider wave Δ</div><div class="val">+3.2pp</div><div class="meta"><span class="nbadge">250·250</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Aware wave Δ (flat → not reach)</div><div class="val">+0.8pp</div><div class="meta"><span class="nbadge">250·250</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">consider|aware Q4→Q1 (+4.6 derived)</div><div class="val">47.7→52.3</div><div class="meta"><span class="nbadge">aware 153·155</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">used|consider (the trial leak, flat)</div><div class="val">50.7→48.1</div><div class="meta"><span class="nbadge">cons 73·81</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Borealis used|consider (benchmark)</div><div class="val">59.8%</div><div class="meta"><span class="nbadge">cons 102</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Consider gap to Borealis (narrowed)</div><div class="val">−10.0→−8.4</div><div class="meta"><span class="nbadge">of 250</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Mix-adjusted consider Δ (real)</div><div class="val">+2.6 std·.6 art</div><div class="meta"><span class="nbadge">~250</span><span class="dot solid"></span></div></div>
+            </div>
+          </div>
+
+          <div class="viz">
+            <div class="vlab">Comparison-rate panel — <b>conversion win, not reach</b>. Aurora in the amber container.</div>
+            <div class="panels">
+              <div class="panel focus">
+                <div class="pt">consider | aware <span style="color:var(--consider)">●</span></div>
+                <div class="bars">
+                  <div class="bargrp"><div class="bar consider q0" style="height:73%"><span class="top">47.7</span></div><div class="bcap">Q4</div></div>
+                  <div class="bargrp"><div class="bar consider" style="height:81%"><span class="top">52.3</span></div><div class="bcap">Q1</div></div>
+                </div>
+              </div>
+              <div class="panel focus">
+                <div class="pt">used | consider <span style="color:var(--used)">●</span></div>
+                <div class="bars">
+                  <div class="bench" style="bottom:92%"><span>Borealis 59.8</span></div>
+                  <div class="bargrp"><div class="bar used q0" style="height:78%"><span class="top">50.7</span></div><div class="bcap">Q4</div></div>
+                  <div class="bargrp"><div class="bar used" style="height:74%"><span class="top">48.1</span></div><div class="bcap">Q1</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="answer clean">Consideration rose <b>+3.2pt to 32.4%</b> — and it's a <b>conversion win, not a reach win</b>. Among people already aware of Aurora, consideration climbed 47.7% → 52.3% (a +4.6pt gain), while awareness barely moved (+0.8pt). It survives mix-adjustment (+2.6 std, 0.6 artefact), so it's real. The unfinished job is <b>trial</b>: Aurora converts ~48% of considerers vs Borealis's ~60%.</div>
+          <div class="note"><span class="k"><span class="trust quiet">trust · quiet</span></span><span>All bases solid (n ≥ 153 on every conditional rate). No thin cells — the answer reads in ~10 seconds.</span></div>
+          <div class="worth"><span class="wl">Worth a look</span><p>The consideration gap to Borealis narrowed (−10.0 → −8.4), but Borealis's <b>awareness surged +9.6</b> this wave — that new reach may convert down-funnel next wave. Grounded, forward-looking, <b>opt-in</b> — a quiet second beat, not the headline.</p></div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="card">
+        <div class="q"><div class="lab">Question · the trap</div><p>"Which age group is driving Aurora's growth?"</p></div>
+        <div class="body">
+          <div>
+            <div class="blk-lab">Plan · attribute_to_segment</div>
+            <div class="plan">
+              <div class="p"><span class="mono">stageByDimension(age_band)</span> per wave — the requested cut</div>
+              <div class="p"><span class="mono">mixAdjustedDelta(age_band)</span> — <i>auto-appended</i>: is the +3.2 a mix artefact?</div>
+              <div class="p"><span class="mono">gender counter-cut</span> — <i>auto-appended</i> whenever dim = age_band</div>
+              <div class="p" style="border-color:var(--focus);background:var(--focus-soft)">↻ Critique bars every thin cell → back to <b>Plan</b> (a new plan); gender already computed, refusal leads</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="blk-lab">Computed · claim ledger</div>
+            <div class="ledger">
+              <div class="led thinrow"><div class="l">50+ consider Q4→Q1 (the eye-catcher)</div><div class="val">31.2→48.1</div><div class="meta"><span class="nbadge">n=16·27</span><span class="dot thin"></span></div></div>
+              <div class="led thinrow"><div class="l">50+ considerer <b>count</b> (the real size)</div><div class="val">5→13 ppl</div><div class="meta"><span class="nbadge">n=16·27</span><span class="dot thin"></span></div></div>
+              <div class="led thinrow"><div class="l">50+ <b>used</b> count, Q1</div><div class="val">4 ppl</div><div class="meta"><span class="nbadge">n=27</span><span class="dot thin"></span></div></div>
+              <div class="led thinrow"><div class="l">25-34 consider (base passes, count fails)</div><div class="val">26.1→35.1</div><div class="meta"><span class="nbadge">cnt 23·26</span><span class="dot thin"></span></div></div>
+              <div class="led"><div class="l">Pooled consider gain, mix-adj <b>(confirmed)</b></div><div class="val">+3.2→+2.6</div><div class="meta"><span class="nbadge">~250</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Gap to Borealis, women Q1 (directional)</div><div class="val">−14.3</div><div class="meta"><span class="nbadge">98/98</span><span class="dot solid"></span></div></div>
+              <div class="led"><div class="l">Gap to Borealis, men Q1 (directional)</div><div class="val">−5.1</div><div class="meta"><span class="nbadge">136/136</span><span class="dot solid"></span></div></div>
+              <div class="led thinrow"><div class="l">Female base + considerers shift (caveat)</div><div class="val">124→98·32→29</div><div class="meta"><span class="nbadge">base moved</span><span class="dot thin"></span></div></div>
+            </div>
+          </div>
+
+          <div class="viz">
+            <div class="vlab"><b>The refusal is shown, not hidden.</b> Greyed age cells (with n + count) beside the solid gender gap.</div>
+            <div class="panels">
+              <div class="panel">
+                <div class="pt grey">consider by age — all barred</div>
+                <div class="bars grey">
+                  <div class="bargrp"><div class="bar amber" style="height:45%"><span class="top">27</span></div><div class="bcap">18-24<br>n70·c19</div></div>
+                  <div class="bargrp"><div class="bar amber" style="height:58%"><span class="top">35</span></div><div class="bcap">25-34<br>n74·c26</div></div>
+                  <div class="bargrp"><div class="bar amber" style="height:49%"><span class="top">29</span></div><div class="bcap">35-49<br>n79·c23</div></div>
+                  <div class="bargrp"><div class="bar amber" style="height:80%"><span class="top">48</span></div><div class="bcap">50+<br>n27·c13</div></div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="pt">consider gap — gender (solid)</div>
+                <div class="bars">
+                  <div class="bargrp"><div class="bar amber" style="height:49%"><span class="top">29.6</span></div><div class="bcap">♀ Aurora</div></div>
+                  <div class="bargrp"><div class="bar neutral" style="height:73%"><span class="top">43.9</span></div><div class="bcap">♀ Borl<br><span class="gaploss">−14.3</span></div></div>
+                  <div class="bargrp"><div class="bar amber" style="height:58%"><span class="top">34.6</span></div><div class="bcap">♂ Aurora</div></div>
+                  <div class="bargrp"><div class="bar neutral" style="height:66%"><span class="top">39.7</span></div><div class="bcap">♂ Borl<br><span class="gaploss">−5.1</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="answer">The data <b>can't credibly name an age group.</b> The biggest-looking mover — 50+, 31% → 48% — is just <b>5 → 13 people</b> on a base of 16 → 27, and the 25-34 "swing" is ~3 respondents. The robust read is the <b>pooled +3.2pt gain</b> (mix-adjusted +2.6). Directionally, Aurora's soft spot is <b>women</b> (gap ~−14pt vs −5pt for men) — but on these bases that's within margin and the female base shrank 124 → 98, so it's a <b>hypothesis to track, not a confirmed driver.</b></div>
+          <div class="note"><span class="k"><span class="trust loud">trust · loud</span></span><span>The hero moment: the thin guard fires, every age cell is <span class="mono">causal_admissible:false</span>, the loop pivots to gender — and even the redirect is honestly hedged.</span></div>
+          <div class="worth"><span class="wl">Worth a look</span><p>If you want a <b>lever</b>, not a driver: closing Aurora's consider→use gap to Borealis's ~60% is worth <b>~+3.8pp usage</b> — a labelled projection, not observed. A flagged what-if survives the guards, so it earns the slot; a thin-cell age story would not.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAILURE MODES -->
+  <section>
+    <div class="shead"><span class="n">05</span><h2>Where it goes wrong — and what blocks it</h2></div>
+    <div class="fm">
+      <div class="f"><div class="m"><span class="fn">thin</span>Thin numerator slips a base-only check (25-34: base 88, count 23)</div><div class="mit">Two-part guard (base ≥ 50 <b>and</b> count ≥ 30); small-multiples print count beside n.</div></div>
+      <div class="f"><div class="m"><span class="fn">math</span>Model does its own arithmetic / wrong rounding (31.25→31.3)</div><div class="mit">Plan-then-compute keeps rows out of context; round1 inside functions; ledger post-check.</div></div>
+      <div class="f"><div class="m"><span class="fn">null</span>A null rate (zero denominator) read as 0%</div><div class="mit">Null guard renders "— not computable (no base)", never a numeric 0 or a bar.</div></div>
+      <div class="f"><div class="m"><span class="fn">share</span>shareOfStage carries no flag and can be null</div><div class="mit">Emits its own "category share, no respondent base" lens; never quoted without it.</div></div>
+      <div class="f"><div class="m"><span class="fn">proj</span>Projection (19.4%) shown as an observed figure</div><div class="mit">is_projection quarantined; forced hatched bar + badge + assumption string.</div></div>
+      <div class="f"><div class="m"><span class="fn">cache</span>aurora_consider_by_age read from JSON &amp; generalised</div><div class="mit">JSON is CI fixture only; every cut is a live stageByDimension call, recorded in the trace.</div></div>
+      <div class="f"><div class="m"><span class="fn">denom</span>%-of-aware confused with %-of-250</div><div class="mit">Each function returns its own denominator_lens; the Trust strip reads it from the same return.</div></div>
+      <div class="f"><div class="m"><span class="fn">mix</span>Wave delta read as real when it's sample-mix artefact</div><div class="mit">mixAdjustedDelta auto-appended; downgrade if |artefact| ≥ 0.5×|Δ| or a sign-flip.</div></div>
+      <div class="f"><div class="m"><span class="fn">redir</span>The gender redirect trades one trap for another (female base 124→98)</div><div class="mit">diffOfProportions gates the contrast on significance; base shift surfaced; labelled directional.</div></div>
+      <div class="f"><div class="m"><span class="fn">causal</span>Hallucinated causal link between two real numbers</div><div class="mit">Two cross-sections → association verbs only; a guard flags "because / driven by / caused".</div></div>
+      <div class="f"><div class="m"><span class="fn">scope</span>Out-of-scope question coerced to the nearest intent</div><div class="mit">OUT_OF_SCOPE intent + designed REJECT card; resolved intent echoed back; 3-pass cap.</div></div>
+      <div class="f"><div class="m"><span class="fn">parse</span>Wrong question answered confidently (misattribution)</div><div class="mit">Parse echoed for confirmation; parse pinned in CI for the two graded examples.</div></div>
+    </div>
+  </section>
+
+  <footer>
+    Every figure here is recomputed from <span class="mono">data/responses_raw.json</span> via <span class="mono">lib/metrics.mjs</span> and pinned in CI by <span class="mono">/verify-data</span> (<span class="mono">node --test lib/**/*.test.mjs</span>). Design source of truth: <span class="mono">docs/part2/architecture.md</span>. · Mockup, not the in-app page.
+  </footer>
+
+</div>
+</body>
+</html>
