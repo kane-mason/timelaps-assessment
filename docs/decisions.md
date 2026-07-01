@@ -125,6 +125,138 @@ stub, and a user footer; top bar carries a breadcrumb + a Q1 2026 wave pill. The
 in the root layout so it persists across routes. `/analyst` is an intentional stub for now (ask
 box + example questions + a "design in progress" note) — the real Part 2 wiring is next.
 
+### 2026-06-30 · Part 2 design: a bounded loop with a *deterministic* critique
+The AI analyst is designed as a **Plan → Compute → Critique → Replan** loop where the decisive
+choice is that **Critique is plain code, not a second LLM** — a guard pass over a
+provenance-carrying ComputeLog. The LLM only (a) picks one of six intents + typed entity slots,
+(b) names a function from the closed 17-function `lib/metrics.mjs` registry, and (c) narrates over
+already-logged values; the functions decide every number. **Grounding = three structural locks**
+(constrained tool surface; plan-then-compute so raw rows never enter context; a claim-ledger
+post-check with typed *derived* combinators for figures like the +4.6pt gain) **+ a CI anchor**
+(`/verify-data` pins functions; a golden-transcript test pins the plan+ledger for the two graded
+questions). **Thin data is a loop stage**, with a two-check guard (`base_n ≥ 50 AND count ≥ 30`,
+named constants) — the second check is what catches Q2's numerator trap (25-34 swing = ~3 people
+on a base that clears 50). Q2 ("which age group") therefore *refuses* to name a group and pivots
+to gender — and even that redirect is instrumented (female base 124→98, contrast within margin →
+"directional, not confirmed"). **Viz = one chart by result shape**, reusing Part 1 idioms; no new
+library. Deliverables: `docs/part2/architecture.md` (source of truth) + a self-contained
+`docs/part2/architecture-mockup.html`; the in-app page lands at `/analyst/architecture` next.
+Every figure recomputed from raw and verified. The design choice itself (deterministic critique)
+is the answer to "where it can go wrong": honesty is structural, not prompted.
+
+### 2026-07-01 · Part 2 evolves: register the tools + guardrails, let the model reason (updates the 2026-06-30 entry)
+The Plan stage moves from a deterministic `intent → recipe` table to **LLM-driven tool selection**:
+`lib/metrics.mjs` (already written to be *exposed as MCP tools*) is registered on the call and the
+model decides what to call and in what order — the pattern Kane has built in production (an
+"insights" MCP server). The six intents survive only as **optional hints**.
+
+The guiding principle is **encode invariants, not procedures**: *does a thing encode how to think
+(the model's job — it will outgrow us) or what's true about the data's limits (keep it fixed)?*
+Recipes are reasoning wearing a lab coat and will tunnel-vision a model that reasons better than
+our 2026 idea of how to analyse; **a smarter model doesn't make `n = 4` reliable**, so the grounding
+guards are a different kind of thing and stay in code. The scalability case: models improve faster
+than we can maintain recipes, so **put the intelligence in the layer that's improving on someone
+else's budget — you stop racing the model and start riding it** (a model upgrade sharpens the
+analyst for free). That's the video's closing line.
+
+What changes vs 2026-06-30: (1) Plan = an agentic tool-use loop (N capped model rounds), so the
+LLM-call count goes from a 2-call floor to *parse + N tool-rounds + narrate* — the cost of
+flexibility. (2) The honesty-critical auto-appends (mix-adjust every movement/attribution;
+cross-check a thin cut against a solid one) move **out of the recipe and into Critique as
+deterministic invariants**, so Q2's redirect holds even when the model's plan is naive. (3) Guards
+are reframed from "analysis strategy" to **data-invariants**, and must *shape presentation, not
+forbid exploration* (GATE→FLAG→REDIRECT annotates, never hides) or they become their own tunnel.
+Statistical judgement stays the middle case done right: **tools not hardcoded methods, a floor not
+a cage** (`proportionCI`/`diffOfProportions` exposed to the model, with a deterministic floor).
+What does **not** change: the three grounding locks and the claim-ledger — grounding never depended
+on a *table* choosing the tools, only on the constrained surface + the deterministic guard between
+compute and narrate. `docs/part2/architecture.md` and the mockup are updated to match.
+
+### 2026-07-01 · Part 2 is scoped to *this dataset* on purpose — not designed for arbitrary scale
+The brief opens Part 2 with "Using the **same dataset**, describe how you would build an AI analyst."
+We take that emphasis literally: the design targets the two provided waves of ~250 respondents, and
+its scoping choices are **deliberate consequences of that constraint, not oversights.**
+
+Why this shows up concretely:
+- **The data layer is pure functions over a bundled JSON held in memory** (`lib/metrics.mjs` over
+  `data/responses_raw.json`) — no database, no warehouse, no vector store / RAG. At ~500 records a DB
+  would be pure over-engineering, and RAG would actively *harm* grounding (retrieving approximate
+  matches instead of computing exact numbers — the one thing Part 2 must not do).
+- **The tool registry is a fixed, closed set of 17 metric functions**, not a general query/SQL
+  surface — because the analyses worth running against *this* dataset are enumerable.
+- **The thin-data guards encode facts about this specific sample** (`n < 50` unreliable; every Aurora
+  consider-by-age cell thin; gender is the trustworthy cut) — invariants that only mean something
+  against these numbers.
+
+We are explicitly **not** designing for N respondent records, or many waves/brands. If that were ever
+needed, the tool contract is the seam — swap the in-memory functions for a warehouse query behind the
+*same* interface and nothing above the tool layer changes — but generalising is **out of scope by the
+brief's own framing.** Calling that out is the point: narrow-by-design reads as judgment, not
+omission. (It's also the honest answer to "why no database / why not RAG?" in the video.)
+
+### 2026-07-01 · Visualization follows the same "ride the model" principle — open grammar, code-owned values, legibility floor
+Corrects an earlier over-reach. The "no chart library" call was **Part 1-scoped** (the funnel matrix)
+and explicitly says "reconsider ... if a *secondary* visualization needs real charting"; and the
+"small fixed vocabulary" in the first Part 2 draft was an assumption, not a constraint. **A fixed
+*dataset* does not imply a fixed *chart set*** — capping the analyst at a few hand-built components
+would tunnel-vision the viz exactly as a recipe table tunnel-visions the analysis.
+
+So the viz layer mirrors the planner (see the tool-selection entry):
+- **Model owns the form** — it emits a `VizSpec` (mark / encoding / annotation) into an **open,
+  brand-themed, legibility-bounded grammar** (Vega-Lite-style is the standard target; a bespoke
+  ref-only schema is the minimal one). It can visualize a question in ways we didn't pre-design, and
+  a stronger future model picks better forms **for free**.
+- **Code owns the values** — the spec carries only **references** into the `ComputeLog`; a
+  deterministic renderer binds the numbers, applies the theme, and carries the confidence treatment
+  (thin cells greyed). The model never supplies a value and can't un-grey a thin base. **Openness of
+  *form* ≠ openness of *numbers*.**
+- **Two code-enforced floors:** (1) values come only from the ledger; (2) the grammar is restricted
+  to marks a marketing leader reads **at a glance** — sourced to the **brief** ("a busy marketing
+  leader can act on in seconds"; "read in one glance"), not to our DESIGN.md number.
+- **Latency ≠ legibility.** An AI analyst is *expected to think*; time-to-**answer** is not the
+  constraint (the loop may take a beat and can stream a "thinking" state). The "at a glance" bar is
+  time-to-**comprehend the rendered card**. DESIGN.md's "~10s" means ~10s to *understand once
+  rendered*, not to respond.
+- **Branded presets, not a cage** — the Part 1 idioms (comparison-rate panel, diverging delta bars,
+  small-multiples-with-n) are the model's default pick for the common shapes and the two graded
+  questions (kept pixel-clean); the open grammar is the long-tail path.
+
+Vega-Lite was considered as the render target (the de-facto JSON chart grammar, with `vega-embed` /
+`react-vega`, and a common LLM emission target). Not adopted as a hard choice yet — the *seam* is the
+ref-only `VizSpec`; whichever renderer sits behind it (bespoke components now, a themed general
+grammar later) is swappable without touching the model or the grounding.
+
+Video beat: *"the analyst can visualize in ways I didn't design, and it'll improve as the models do —
+but it can never draw a number it didn't compute, or a chart a marketing leader can't read at a glance."*
+
+Note (process): two earlier claims mis-cited project artifacts as brief requirements — the Part-1
+"no chart library" decision, and DESIGN.md's "~10s". Both are *ours, derived from the brief*, not the
+brief itself. Keep that line sharp; the source may go to assessors.
+
+### 2026-07-01 · Two-tier answers — conventional primary + an opt-in "curious" follow-up
+Every answer has room for two tiers, mapping onto the same open / code-owned divide as the rest of
+the design. **Primary:** the conventional, decision-ready analysis + chart a marketing analyst would
+expect, landing at a glance — anchored by the hints the model already carries (intent→analysis hints,
+branded viz presets; these *are* the "industry-standard suggestions" seeded in the system prompt).
+**Curious follow-up:** an optional, clearly-subordinate "Worth a look" beat — a non-obvious angle, a
+watch-item, a next lever — where the model's curiosity/agency lives and a stronger future model gets
+more interesting for free.
+
+Brief-grounded: *"If you spot a secondary insight worth surfacing, your call whether to include it.
+Restraint is as telling as inclusion."* Three rules keep the second tier honest:
+1. **Same guards, and they matter *more* here** — curiosity is exactly where you drift into thin
+   cells (the Q2 trap) or causal over-claims. The follow-up runs through the identical thin-data,
+   grounding, and associational-verbs guards; grounded curiosity is a feature, unguarded is the failure.
+2. **Opt-in, suppressed by default** — never manufacture novelty. Surface a follow-up only when
+   something non-obvious survives the guards; otherwise stay silent. New failure mode recorded:
+   *fabricated curiosity*.
+3. **Primary stays at-a-glance** — the follow-up is a quieter, visually-subordinate strip so
+   time-to-comprehend the primary is untouched.
+
+No new machinery — reuses the hints (conventional anchor) + the guards (now gating the follow-up),
+plus one system-prompt instruction and one render zone. Reflected in architecture.md §7 + the two
+traces, and a "Worth a look" strip on the mockup answer cards.
+
 ## Open
 
 - **Part 2 working tool (stretch)** — the design is presented in the app regardless; whether
