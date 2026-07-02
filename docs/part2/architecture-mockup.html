@@ -287,9 +287,28 @@
       <div class="row"><b>Render</b> <span class="chip io">i/o</span><p><b>Deterministic, no model.</b> Takes the cleared submission (answer + VizSpec), binds the VizSpec's refs → ledger values → <b>draws the chart</b> (themed, thin cells greyed), then lays out the card: headline → chart → Trust strip (base_n + confidence glyph + denominator lens) → "Show the working" → Caveat rail. Loud only when there's something to flag.</p></div>
       <div class="row"><b>Trace</b> <span class="chip io">i/o</span><p>Each figure expands to <span class="mono">fn(args) → {value, count, base_n, low_confidence}</span>. Footer: "recomputed from data; pinned in CI by /verify-data."</p></div>
     </div>
+  </section>
+
+  <!-- MCP TOOL SERVER -->
+  <section>
+    <div class="shead"><span class="n">02</span><h2>The MCP tool server</h2></div>
+    <p class="lead">The 17 functions in <span class="mono">lib/metrics.mjs</span> are exposed as an <b>MCP tool server</b> — endpoints any agent can call. It's the <b>single source of truth</b>: the same functions power Part 1's view, this analyst, and <span class="mono">/verify-data</span>. Because the tools are honest-by-default, they're safe to hand to any consumer — and their consistent, typed responses are exactly what let Critique be plain code.</p>
+    <div class="twoup" style="margin:18px 0">
+      <div class="callout">
+        <h3>Endpoints <span class="tag">the tool surface</span></h3>
+        <p class="mono" style="font-size:.74rem;line-height:1.95;color:var(--ink)">funnelByBrandWave · waveDeltas · conditionalConversion · gapToLeader · shareOfStage · stageByDimension · mixAdjustedDelta · headToHead · rejectionRate · pullThrough · contestedDemand · opportunityIfMatched · repertoire</p>
+        <p>Each takes typed args (brand / wave / stage / dimension) and returns a <b>self-describing</b> result — value + base size + confidence — never free-form text.</p>
+      </div>
+      <div class="callout">
+        <h3>Why an MCP server</h3>
+        <p><b>Open &amp; reusable</b> — any AI tool connects: a company's own Claude Code, or our analyst. The registry is the product surface.</p>
+        <p><b>Honest-by-default</b> — every response carries <span class="mono">base_n</span>, <span class="mono">low_confidence</span>, <span class="mono">causal_admissible</span> + a suggested redirect, so no consumer misses the caveats.</p>
+        <p><b>Grounded</b> — numbers come from code, not the model; pinned in CI (<span class="mono">/verify-data</span>).</p>
+      </div>
+    </div>
 
     <div class="regpanel">
-      <h3>Why a deterministic guard is even possible — the typed registry</h3>
+      <h3>Typed responses → a deterministic guard</h3>
       <p>Critique can be plain code only because <b>Compute always returns a fixed, typed shape</b>. Every one of the 17 <span class="mono">lib/metrics.mjs</span> functions returns one of a small set of return types, each carrying its own base size and confidence flag — so the guard reads <b>known fields off known objects</b>, never free-form output. That consistency is the foundation the whole loop rests on.</p>
       <div class="regflow">
         <div class="regbox">
@@ -312,9 +331,24 @@ is_projection ?</pre>
     </div>
   </section>
 
+  <!-- THE GATE / CRITIQUE -->
+  <section>
+    <div class="shead"><span class="n">03</span><h2>The gate — everything passes through Critique</h2></div>
+    <p class="lead"><b>Critique</b> is a deterministic checkpoint (code, no LLM) sitting on every flow between the model and the tools. Three different things pass through it, each checked its own way — and the model can't route around any of them.</p>
+    <table>
+      <thead><tr><th>Passing through</th><th>What the gate does — code, no LLM</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><b>Tool request</b><br><span class="mono" style="font-size:.7rem;color:var(--ink3)">model → Compute</span></td><td><span class="mono">fn</span> ∈ the 17-tool registry (an enum); args type-checked against the live vocabularies (brand / wave / stage / dimension). Off-list or invented value → <b>rejected before anything runs</b>.</td><td>rejects <span class="mono">stageByDimension(Aurora, consider, "income")</span> — "income" isn't a live dimension</td></tr>
+        <tr><td><b>Tool response</b><br><span class="mono" style="font-size:.7rem;color:var(--ink3)">Compute → model</span></td><td>attaches the typed flags; <span class="mono">rate===null</span> → "not computable"; <span class="mono">is_projection</span> quarantined; a large mix-artefact downgraded; computes <span class="mono">causal_admissible</span>; on a dead-end appends the mandatory cross-checks (mix-adjust, solid cut).</td><td>50+ cell (count 13 / n 27) → <span class="mono">causal_admissible:false</span>; gender cross-check appended</td></tr>
+        <tr><td><b>submit_answer</b><br><span class="mono" style="font-size:.7rem;color:var(--ink3)">model → out</span></td><td>validates against the ledger: every prose number is a logged value; nothing leans on a <span class="mono">causal_admissible:false</span> cell; association-verbs only (no invented causation); vizSpec refs must exist. Clean → ship; fail → <b>veto</b>.</td><td>vetoes <i>"50+ is driving growth"</i> (leans on a barred cell) → guard-authored finding → re-plan</td></tr>
+      </tbody>
+    </table>
+    <p class="lead" style="margin-top:12px">One deterministic checkpoint, three flows — the same guard each time. The model proposes (requests tools, submits an answer); the gate disposes. It's the honesty hinge the whole design turns on.</p>
+  </section>
+
   <!-- GROUNDING + THIN DATA -->
   <section>
-    <div class="shead"><span class="n">02</span><h2>The two guarantees</h2></div>
+    <div class="shead"><span class="n">04</span><h2>The two guarantees</h2></div>
     <div class="twoup">
       <div class="callout lock">
         <h3>Grounded <span class="tag">no invented numbers</span></h3>
@@ -347,7 +381,7 @@ is_projection ?</pre>
 
   <!-- VIZ SELECTION -->
   <section>
-    <div class="shead"><span class="n">03</span><h2>Viz selection — the model picks the form, code owns the values</h2></div>
+    <div class="shead"><span class="n">05</span><h2>Viz selection — the model picks the form, code owns the values</h2></div>
     <p class="lead">Same principle as the loop: <b>open where the model reasons, code-owned where honesty lives.</b> The model emits a <span class="mono">VizSpec</span> — mark / encoding / annotation — carrying only <b>references</b> into the ledger, never numbers. A deterministic renderer binds the values, applies the Timelaps theme, and greys thin cells. So the analyst can chart a question in a shape we never pre-designed — and a stronger model picks better forms for free — while it stays impossible to draw a number it didn't compute. <b>A fixed dataset doesn't mean a fixed chart set.</b></p>
 
     <div class="twoup" style="margin:18px 0">
@@ -379,7 +413,7 @@ is_projection ?</pre>
 
   <!-- WORKED EXAMPLES -->
   <section>
-    <div class="shead"><span class="n">04</span><h2>The two graded questions, traced</h2></div>
+    <div class="shead"><span class="n">06</span><h2>The two graded questions, traced</h2></div>
     <p class="lead">Both answer cards below use figures recomputed from <span class="mono">responses_raw.json</span> and verified by <span class="mono">/verify-data</span>. Confidence: <span class="dot solid" style="vertical-align:-1px"></span> solid &nbsp; <span class="dot thin" style="vertical-align:-1px"></span> thin (n&lt;50 or count&lt;30).</p>
 
     <p class="lead" style="margin-top:2px"><b>How each card is built — submit_answer, validated, then rendered.</b> The model finishes by calling <b>submit_answer</b> — its answer text + chart choice together; <b>Critique validates</b> it against the ledger, then code turns the choice into the actual chart and lays out the card. The model never draws a pixel or supplies a number.</p>
@@ -514,7 +548,7 @@ is_projection ?</pre>
 
   <!-- FAILURE MODES -->
   <section>
-    <div class="shead"><span class="n">05</span><h2>Where it goes wrong — and what blocks it</h2></div>
+    <div class="shead"><span class="n">07</span><h2>Where it goes wrong — and what blocks it</h2></div>
     <div class="fm">
       <div class="f"><div class="m"><span class="fn">thin</span>Thin numerator slips a base-only check (25-34: base 88, count 23)</div><div class="mit">Two-part guard (base ≥ 50 <b>and</b> count ≥ 30); small-multiples print count beside n.</div></div>
       <div class="f"><div class="m"><span class="fn">math</span>Model does its own arithmetic / wrong rounding (31.25→31.3)</div><div class="mit">Plan-then-compute keeps rows out of context; round1 inside functions; ledger post-check.</div></div>

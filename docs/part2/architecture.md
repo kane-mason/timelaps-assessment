@@ -64,7 +64,15 @@ The 17 functions are registered as MCP tools; the model chooses which to call an
 
 Crucially, the **honesty-critical steps are not left to the recipe** — a hint the model can ignore is not a guarantee. "Any movement or attribution claim must be mix-adjusted, and any thin demographic cut must be cross-checked against a solid one" is enforced as a **deterministic invariant in Critique** (§6), not as a recipe line the model must remember. That is what makes Q2's honest answer *structural*: even a model that plans a naive age-only analysis has the mix-check and the solid-cut cross-check appended by the guard, and the thin cells barred, before anything renders. The model owns the reasoning; the invariant owns the honesty.
 
-## 4. (b) Grounded — three structural locks + a CI anchor
+## 4. (b) Grounded — the MCP tool layer + three structural locks
+
+**The tool layer is an MCP server.** The 17 functions in `lib/metrics.mjs` aren't only called in-process — they're exposed as an **MCP tool server**: named endpoints (`funnelByBrandWave`, `conditionalConversion`, `stageByDimension`, `mixAdjustedDelta`, `headToHead`, …) any agent can connect to. That buys three things:
+
+- **Reusable / open** — a client can point their *own* Claude Code (or any MCP-speaking agent) at the same tools; the registry is the product surface, not a private internal.
+- **Honest-by-default** — every response is self-describing: `base_n`, `low_confidence`, `causal_admissible`, the denominator lens, and a suggested redirect ride on the wire, so *no* consumer can miss the caveats (§6). Data honesty travels *with* the tool; *enforcing* it — refusing to ship an answer that ignores it — is the analyst's job (the guard). **Honest tools open; enforcement is the product.**
+- **One source of truth** — the same functions power Part 1's view, this analyst, and `/verify-data`, so a figure can't drift between them.
+
+And because every endpoint returns a **fixed, typed shape**, a deterministic (code) guard can read known fields off known objects — which is exactly what lets Critique be plain code, not a second LLM. The locks below all rest on this surface.
 
 **Lock 1 — Constrained tool surface.** The LLM's entire numeric vocabulary is the 17 exports in `lib/metrics.mjs`. The `fn` it names is an enum of exactly those; args are type-checked, entity values must be members of the live vocabularies. Off-list function or free-form arithmetic is rejected before any compute. **This is why handing the model the wheel on _what to compute_ costs nothing in grounding:** the guarantee was never that a *table* chose the tools — it is that the model can only ever *request a computation* from the registered surface, never emit a number. Who sequences the tools is irrelevant to whether one can be invented.
 
