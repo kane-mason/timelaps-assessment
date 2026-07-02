@@ -334,7 +334,7 @@ is_projection ?</pre>
           <li style="padding-left:0"><b>Check 1 — base:</b> <span class="mono">base_n &lt; 50</span>. Catches 50+ (n = 16 → 27).</li>
           <li style="padding-left:0"><b>Check 2 — numerator:</b> <span class="mono">count &lt; 30</span>, even when the band base clears 50. Catches the 25-34 "swing" (count 23 → 26 on base 88/74) and the 50+ used cell (count 4).</li>
         </ul>
-        <p>A unified <span class="mono">causal_admissible</span> flag (<span class="mono">base_n ≥ 50 AND count ≥ 30</span>) drives the UI confidence dot — so a cell the guard bars can never render a solid dot while the prose refuses it.</p>
+        <p>A <span class="mono">causal_admissible</span> flag (<span class="mono">base_n ≥ 50 AND count ≥ 30</span> — the count threshold is <i>our recommendation</i>, not a brief rule) rides on the <b>tool response</b>, so any MCP consumer is warned; it drives the UI confidence dot, and the guard <b>enforces</b> it — a barred cell can't render a solid dot while the prose refuses it.</p>
         <div class="ladder">
           <span class="step gate">GATE</span><span class="ar">→</span>
           <span class="step flag">FLAG (greyed, n + count)</span><span class="ar">→</span>
@@ -446,7 +446,7 @@ is_projection ?</pre>
           </div>
 
           <div class="answer clean">Consideration rose <b>+3.2pt to 32.4%</b> — and it's a <b>conversion win, not a reach win</b>. Among people already aware of Aurora, consideration climbed 47.7% → 52.3% (a +4.6pt gain), while awareness barely moved (+0.8pt). It survives mix-adjustment (+2.6 std, 0.6 artefact), so it's real. The unfinished job is <b>trial</b>: Aurora converts ~48% of considerers vs Borealis's ~60%.</div>
-          <div class="note"><span class="k"><span class="trust quiet">trust · quiet</span></span><span>All bases solid (n ≥ 153 on every conditional rate). No thin cells — the answer reads in ~10 seconds.</span></div>
+          <div class="note"><span class="k"><span class="trust quiet">trust · quiet</span></span><span>All bases solid (n ≥ 153 on every conditional rate) — no thin cells to flag, so the Trust strip stays quiet.</span></div>
           <div class="worth"><span class="wl">Worth a look</span><p>The consideration gap to Borealis narrowed (−10.0 → −8.4), but Borealis's <b>awareness surged +9.6</b> this wave — that new reach may convert down-funnel next wave. Grounded, forward-looking, <b>opt-in</b> — a quiet second beat, not the headline.</p></div>
         </div>
       </div>

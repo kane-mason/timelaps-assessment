@@ -11,8 +11,9 @@ Both parts ship on the **same Next.js site**: the design authored here is surfac
 in-app **"AI Analyst" page** (the graded deliverable). Turning it into an actual working
 tool is a **stretch** if time allows. This folder stays the design's source of truth.
 
-- **[architecture.md](architecture.md)** — the design: a bounded Plan→Compute→Critique→Replan
-  loop with a *deterministic* critique, three grounding locks over `lib/metrics.mjs`, a
+- **[architecture.md](architecture.md)** — the design: a bounded Plan→Compute→Critique
+  loop (Critique loops back to Plan on a dead-end) with a *deterministic* critique, three
+  grounding locks over `lib/metrics.mjs`, a
   two-check thin-data guard, viz-by-result-shape, and 12 failure modes. Both example questions
   traced end-to-end with figures verified by `/verify-data`.
 - **[architecture-mockup.html](architecture-mockup.html)** — a self-contained, on-brand visual

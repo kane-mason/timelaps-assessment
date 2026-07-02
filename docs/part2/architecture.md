@@ -18,7 +18,7 @@ So the analyst is graded on five things, and four of them are really one thing: 
 
 ## 2. The approach: register the tools and the guardrails, let the model bring the reasoning
 
-The analyst is a bounded **Plan → Compute → Critique → Replan** loop. Two choices carry it.
+The analyst is a bounded **Plan → Compute → Critique** loop (Critique loops back to Plan on a dead-end). Two choices carry it.
 
 **First — the Plan is the _model_ selecting tools, not a table.** The 17 functions in `lib/metrics.mjs` are registered as an MCP tool surface on the call; the model decides which to call, and in what order, to answer the question. The six intents in §3 survive only as **optional starter hints**, never as a control-flow table. This is the scalability bet: models are getting more capable faster than anyone can hand-author analysis recipes, so a hard recipe table is a maintenance treadmill that also *freezes your 2026 idea of how to analyse* and gives a smarter model tunnel vision. Put the intelligence in the layer that is improving on someone else's budget — **you stop racing the model and start riding it.** A model upgrade makes the analyst sharper for free, with no code change.
 
@@ -42,14 +42,14 @@ The LLM therefore appears at two ends of the loop, with deterministic code in be
 
 | Stage | Kind | What it does |
 |---|---|---|
-| 0. Parse | LLM | NL → typed `AnalysisPlan` (intent, entities). Entity slots resolve **only** against live vocabularies (`brandsOf`, `wavesOf`, `STAGES`, `{age_band, gender}`), so a slot can never hold an invented value. Low-confidence parse or an out-of-vocabulary slot → `OUT_OF_SCOPE`. |
-| 1. Plan | LLM | The model selects and sequences the registered MCP tools (`lib/metrics.mjs`) — an agentic tool-use loop, capped. The six intents are optional starter hints, not a fixed recipe. Args are type-checked against the live vocabularies before any call runs. |
+| 0. Parse | LLM | NL → typed `AnalysisPlan` (intent, entities); entity slots resolve **only** against live vocabularies (`brandsOf`, `wavesOf`, `STAGES`, `{age_band, gender}`), so a slot can never hold an invented value. Shares the **first LLM call** with the first Plan. Low-confidence parse or out-of-vocabulary slot → `OUT_OF_SCOPE`. |
+| 1. Plan | LLM | The model's turn — it selects and sequences the registered MCP tools (six intents = optional hints, not a fixed recipe; args type-checked against the live vocabularies). The loop **re-enters here** on a veto (a **re-plan** with the guard's finding — capped at 3). When it's done gathering, the model exits by calling **`submit_answer`** — its plain-language answer + a `VizSpec` of ledger *references* (no numbers, no drawing) — which Critique validates. |
 | 2. Compute | compute | Dispatch each step to `lib/metrics.mjs` against `responses_raw.json`. Every function returns one of a **small set of fixed, typed shapes** (e.g. `{pct, count, base_n, low_confidence}`), each carrying its base size + confidence — *this consistency is what lets Critique be plain code*. `round1` (half-to-even) lives **inside** the functions so output byte-matches `analysed_outputs.json` (31.25 → 31.2). Append verbatim to the `ComputeLog`. |
-| 3. Critique | guard | **The gate.** Deterministic (no LLM) — reads the typed result fields, checks each result, and **validates the model's `submit_answer`** against the ledger. Clean → ship; **veto** → a **code-authored finding** (inadmissible cells + boundary + solid alternative) → re-plan. Patches the metric-layer holes; emits the **claim ledger**. |
-| 4. Replan | LLM | The Plan step, re-run: control returns to the **model** with the guard's finding (what came back thin / null / inadmissible) so it re-plans on evidence. Hard cap of 3 passes; on exhaustion, state the reliability boundary. |
-| 5. submit_answer | LLM | The model's **exit action**, when it's done gathering: one call carrying the plain-language **answer** (+ opt-in "worth a look") and a `VizSpec` (*which* chart, as references into an open, brand-themed, legibility-bounded grammar — presets for common shapes, free choice for novel ones). No numbers in either; the model never draws. Validated by Critique (row 3) before it ships. |
-| 6. Render | code → io | **Deterministic, no model.** Takes the cleared submission; binds the `VizSpec`'s references → ledger values → **draws the chart** (themed, thin cells greyed), then assembles the Glass-Box Answer Card: headline → chart → Trust strip → "Show the working" → Caveat rail. |
-| 7. Trace | io | Each figure expands to `fn(args) → {value, count, base_n, low_confidence}`; footer ties back to `/verify-data` CI. |
+| 3. Critique | guard | **The gate.** Deterministic (no LLM) — reads the typed result fields, checks each result, and **validates the model's `submit_answer`** against the ledger. Clean → ship; **veto** → a **code-authored finding** (inadmissible cells + boundary + solid alternative) → back to Plan. Patches the metric-layer holes; emits the **claim ledger**. |
+| 4. Render | code → io | **Deterministic, no model.** Takes the cleared submission; binds the `VizSpec`'s references → ledger values → **draws the chart** (themed, thin cells greyed), then assembles the Glass-Box Answer Card: headline → chart → Trust strip → "Show the working" → Caveat rail. |
+| 5. Trace | io | Each figure expands to `fn(args) → {value, count, base_n, low_confidence}`; footer ties back to `/verify-data` CI. |
+
+*(Re-plan and `submit_answer` aren't separate stages — re-plan is the loop re-entering Plan on Critique's veto, and `submit_answer` is the model's exit action from Plan, gated by Critique.)*
 
 ## 3. (a) What to compute — the model selects tools; recipes are hints
 
@@ -91,7 +91,7 @@ The viz layer follows the **same principle as the planner** (§2): open where th
 1. **Values floor** — every datum comes from the ledger (ref-only spec). This is the grounding guarantee, extended to pixels.
 2. **Legibility floor** — the grammar is restricted to marks a marketing leader reads **at a glance** (the brief: *"a busy marketing leader can act on in seconds"*; *"read in one glance"*). A future model could invent a technically-faithful chart that's still unreadable; this floor bounds *form*, and it's the one real ceiling on the openness — not grounding, which is already handled.
 
-**Legibility is time-to-comprehend, not time-to-answer.** An AI analyst is *expected to think* — the deliberate Plan→Compute→Critique→Replan loop may take a beat, and the UI can stream a visible "thinking" state while it does. The "at a glance" bar applies only to the **rendered answer card**: once it's on screen, the insight should land in seconds because it's *clear*, not because the analyst was *fast*. (DESIGN.md crystallizes this as "~10s to understand once rendered.")
+**Legibility is time-to-comprehend, not time-to-answer.** An AI analyst is *expected to think* — the deliberate Plan→Compute→Critique loop may take a beat, and the UI can stream a visible "thinking" state while it does. The "at a glance" bar applies only to the **rendered answer card**: once it's on screen, the insight should land in seconds because it's *clear*, not because the analyst was *fast*. (DESIGN.md crystallizes this as "~10s to understand once rendered.")
 
 **Branded presets, not a cage.** For the common shapes — and especially the two graded questions, which we must nail — the model's default pick is a curated house-style preset reusing the Part 1 idioms, so those stay pixel-clean and native:
 
@@ -112,11 +112,13 @@ This guard is the clearest example of a **data-invariant, not an analysis strate
 `THIN_BASE = 50` is hard-coded (`lib/metrics.mjs:14`) and every base-bearing return carries `low_confidence` at the conditioning base it actually used. The guard runs **two checks**, because the brief's Q2 trap defeats a naive single one:
 
 - **Check 1 — base:** `base_n < THIN_BASE`. Catches 50+ (n = 16 → 27).
-- **Check 2 — numerator:** a hard constant `THIN_COUNT = 30` bars a cell from causal claims when its supporting count is below it, **even though the band base clears 50**. This catches the 25-34 "swing" (count 23 → 26, base 88/74, `low_confidence: false`) — ~3 people, inside noise — and the 50+ used cell (count 4).
+- **Check 2 — numerator:** `count < THIN_COUNT` bars a cell from causal claims when its supporting count is too small, **even though the band base clears 50**. This catches the 25-34 "swing" (count 23 → 26, base 88/74, `low_confidence: false`) — ~3 people, inside noise — and the 50+ used cell (count 4).
 
-Both thresholds are **named constants in `lib/metrics.mjs`** alongside `THIN_BASE`, so the "deterministic guard" claim is CI-pinnable, not a vibe.
+`THIN_BASE = 50` is the real, shipped constant (`lib/metrics.mjs:14`, pinned by `/verify-data`) — and it's brief-derived (the `n < 50` rule). `THIN_COUNT = 30` is **our recommended threshold** — a heuristic, not a data-fact from the brief — so it belongs in the **guard layer**, documented as a recommendation, not baked in beside `THIN_BASE`.
 
-The flag the guard decides on and the flag the UI renders are **unified**: every base-bearing ledger entry carries a `causal_admissible` boolean (`base_n ≥ 50 AND count ≥ THIN_COUNT`), and the Trust-strip confidence dot is driven off **that** — not off `low_confidence` alone. Otherwise 25-34 (`low_confidence: false`, count 26) would render a solid dot while the prose refuses to name it.
+Admissibility — `base_n ≥ 50 AND count ≥ THIN_COUNT` — is surfaced as a `causal_admissible` flag **on the tool response**, so *any* consumer (our analyst, or a client's own agent over MCP) is warned by default. (Today the shipped functions return `{pct, count, base_n, low_confidence}`; `causal_admissible` is derived from `count` + `base_n` and rides on the response — a small addition, not yet in the code.) The Trust-strip confidence dot keys off `causal_admissible`, not `low_confidence` alone — otherwise 25-34 (`low_confidence: false`, count 26) would render a solid dot while the prose refuses to name it. The tool *reports* admissibility; the **guard enforces it** — vetoing any answer that leans on a `causal_admissible: false` cell. Reporting is open; enforcement is the analyst's job.
+
+> **How this generalizes (beyond this exercise's scope).** Exposing the metrics over MCP means *data honesty* rides on the response — flags, base sizes, `causal_admissible`, even a suggested redirect — so any client (their own agent, or ours) is warned by default; that's good tool citizenship, not privileged logic to withhold. The *enforcement* — refusing to ship an answer that ignores the warning — is orchestration only the consuming agent can run, and that is the analyst's value-add. **Honest tools, open; honesty enforcement, the product.**
 
 **The handling ladder is enforced:** GATE (thin cells excluded from headline/causal claims) → FLAG (rendered greyed, `n` and `count` inline) → REDIRECT (if the headline cell is thin, the card is forbidden from naming it and stage 4 pivots to the strongest **significant** solid cut).
 

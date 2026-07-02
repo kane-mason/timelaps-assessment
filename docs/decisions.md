@@ -126,7 +126,7 @@ in the root layout so it persists across routes. `/analyst` is an intentional st
 box + example questions + a "design in progress" note) — the real Part 2 wiring is next.
 
 ### 2026-06-30 · Part 2 design: a bounded loop with a *deterministic* critique
-The AI analyst is designed as a **Plan → Compute → Critique → Replan** loop where the decisive
+The AI analyst is designed as a **Plan → Compute → Critique** loop (Critique loops back to Plan on a dead-end) where the decisive
 choice is that **Critique is plain code, not a second LLM** — a guard pass over a
 provenance-carrying ComputeLog. The LLM only (a) picks one of six intents + typed entity slots,
 (b) names a function from the closed 17-function `lib/metrics.mjs` registry, and (c) narrates over
